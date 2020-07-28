@@ -59,6 +59,7 @@ enum ResponseError: Error, LocalizedError {
 
 
 class DefaultNetworkWorker: NetworkWorker {
+    // MARK: - Properties
     var supportedErrorTypes: [CodableNetworkError.Type] = []
         
     let jsonEncoder: JSONEncoder
@@ -67,12 +68,14 @@ class DefaultNetworkWorker: NetworkWorker {
     private let session: URLSession
     private var subscriptions = Set<AnyCancellable>()
     
+    // MARK: - Init
     init() {
         self.session = URLSession(configuration: URLSessionConfiguration.default)
         self.jsonEncoder = JSONEncoder()
         self.headers = ["Accept": "application/json"]
     }
     
+    // MARK: - Methods
     func performDataTaskWithMapping<T: Decodable>(with method: RequestMethod, to body: String, resource: String, response type: T.Type, queryParameters: [String: Any]?, bodyParameters: [String: Any]?, additionalHeaders: [String: String]?, rawData: Data?, bodyType: BodyType) -> AnyPublisher<T, Error> {
         
         return self.performDataTask(with: method, to: body, resource: resource, queryParameters: queryParameters, bodyParameters: bodyParameters, additionalHeaders: additionalHeaders, rawData: rawData, bodyType: bodyType)

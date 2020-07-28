@@ -11,14 +11,17 @@ import Resolver
 import Combine
 
 class DefaultBackendController {
+    // MARK: - Properties
     @Injected var networkWorker: NetworkWorker
     @Injected var credentialStorage: CredentialStorage
     
+    // MARK: - Init
     init(networkWorker: NetworkWorker, credentialStorage: CredentialStorage) {
         self.networkWorker = networkWorker
     }
     
-    public func performRequestWithModel<T: Decodable, R: Encodable>(with method: RequestMethod, to resource: String, response type: T.Type, queryParameters: [String: Any]? = nil, bodyParameters: [String: Any]? = nil, rawData: Data? = nil, model: R?, bodyType: BodyType, needApiToken: Bool = true) -> AnyPublisher<T, Error> {
+    // MARK: - Methods
+    func performRequestWithModel<T: Decodable, R: Encodable>(with method: RequestMethod, to resource: String, response type: T.Type, queryParameters: [String: Any]? = nil, bodyParameters: [String: Any]? = nil, rawData: Data? = nil, model: R?, bodyType: BodyType, needApiToken: Bool = true) -> AnyPublisher<T, Error> {
         var queryParameters = queryParameters ?? [String: Any]()
         
         var encodedData: Data?
@@ -43,7 +46,7 @@ class DefaultBackendController {
         .eraseToAnyPublisher()
     }
     
-    public func performRequest<T: Decodable>(with method: RequestMethod, to resource: String, response type: T.Type, queryParameters: [String: Any]? = nil, bodyParameters: [String: Any]? = nil, rawData: Data? = nil,  bodyType: BodyType, needApiToken: Bool = true) -> AnyPublisher<T, Error> {
+    func performRequest<T: Decodable>(with method: RequestMethod, to resource: String, response type: T.Type, queryParameters: [String: Any]? = nil, bodyParameters: [String: Any]? = nil, rawData: Data? = nil,  bodyType: BodyType, needApiToken: Bool = true) -> AnyPublisher<T, Error> {
         var queryParameters = queryParameters ?? [String: Any]()
         
         if needApiToken {
@@ -63,6 +66,7 @@ class DefaultBackendController {
     }
 }
 
+// MARK: - BackendAuthorizationController
 extension DefaultBackendController: BackendAuthorizationController {
     func createRequestToken() -> AnyPublisher<CreateRequestTokenResponse, Error> {
         return self.performRequest(with: .get, to: "/authentication/token/new", response: CreateRequestTokenResponse.self, queryParameters: ["api_key": APIConstants.apiKey], bodyType: .rawData)

@@ -9,12 +9,12 @@
 import Foundation
 
 protocol CredentialStorageOutput: class {
-    var sessionID: String? { get }
-    var sessionIDExpiresAt: Date? { get }
+    var userCredential: UserCredential? { get }
 }
 
 protocol CredentialStorageInput {
-    func setValues(sessionID: String, sessionIDExpiresAt: Date)
+    func setValues(sessionID: String)
+    func setValue(userCredential: UserCredential)
     func clearValues()
 }
 

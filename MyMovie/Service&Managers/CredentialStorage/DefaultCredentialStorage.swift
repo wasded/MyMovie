@@ -10,22 +10,23 @@ import Foundation
 
 class DefaultCredentialStorage: CredentialStorage {
     // MARK: - Properties
-    var sessionID: String?
-    var sessionIDExpiresAt: Date?
+    var userCredential: UserCredential?
     
     // MARK: - Init
-    init(sessionID: String? = nil, sessionIDExpiresAt: Date?) {
-        self.sessionID = sessionID
+    init(userCredential: UserCredential? = nil) {
+        self.userCredential = userCredential
     }
     
     // MARK: - Methods
-    func setValues(sessionID: String, sessionIDExpiresAt: Date) {
-        self.sessionID = sessionID
-        self.sessionIDExpiresAt = sessionIDExpiresAt
+    func setValues(sessionID: String) {
+        self.userCredential = UserCredential(sessionID: sessionID)
+    }
+    
+    func setValue(userCredential: UserCredential) {
+        self.userCredential = userCredential
     }
     
     func clearValues() {
-        self.sessionID = nil
-        self.sessionIDExpiresAt = nil
+        self.userCredential = nil
     }
 }

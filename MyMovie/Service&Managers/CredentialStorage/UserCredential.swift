@@ -10,10 +10,8 @@ import Foundation
 
 struct UserCredential: Codable {
     var sessionID: String
-    var sessionIDExpiresAt: Date
     
     enum CodingKeys: String, CodingKey {
         case sessionID = "session_id"
-        case sessionIDExpiresAt
     }
 }
