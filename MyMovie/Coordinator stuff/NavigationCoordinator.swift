@@ -72,7 +72,7 @@ open class NavigationCoordinator: Coordinator<UINavigationController>, UINavigat
     public func pop(to vc: UIViewController, animated: Bool = true) {
         rootViewController.popToViewController(vc, animated: animated)
         
-        if let index = viewControllers.index(of: vc) {
+        if let index = viewControllers.firstIndex(of: vc) {
             let lastPosition = viewControllers.count - 1
             if lastPosition > 0 {
                 viewControllers = Array(viewControllers.dropLast(lastPosition - index))
@@ -103,7 +103,7 @@ open class NavigationCoordinator: Coordinator<UINavigationController>, UINavigat
         rootViewController.delegate = nil
         
         for vc in viewControllers {
-            guard let index = rootViewController.viewControllers.index(of: vc) else { continue }
+            guard let index = rootViewController.viewControllers.firstIndex(of: vc) else { continue }
             rootViewController.viewControllers.remove(at: index)
         }
         
@@ -135,7 +135,7 @@ open class NavigationCoordinator: Coordinator<UINavigationController>, UINavigat
         var newNavigationViewControllers = self.rootViewController.viewControllers
         
         if let latestViewController = self.viewControllers.last,
-            let index = newNavigationViewControllers.index(of: latestViewController) {
+            let index = newNavigationViewControllers.firstIndex(of: latestViewController) {
             let range = index+1...newNavigationViewControllers.count-1
             newNavigationViewControllers.removeSubrange(range)
             newNavigationViewControllers.append(newViewController)

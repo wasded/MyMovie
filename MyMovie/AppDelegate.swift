@@ -7,23 +7,12 @@
 //
 
 import UIKit
-import Combine
 import Resolver
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, Resolving {
-    var window: UIWindow?
-    var appCoordinator: AppCoordinator!
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.registerDependencies()
-
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = UINavigationController()
-        self.window?.rootViewController?.view.backgroundColor = .white
-        self.window?.makeKeyAndVisible()
-        self.appCoordinator = AppCoordinator(rootViewController: self.window?.rootViewController as! UINavigationController, sessionManager: Resolver.resolve())
-        self.appCoordinator.start { }
         
         return true
     }
