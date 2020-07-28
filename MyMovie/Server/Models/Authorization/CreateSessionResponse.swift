@@ -10,13 +10,17 @@ import Foundation
 
 struct CreateSessionResponse: Codable {
     var success: Bool
-    var expiresAt: String
-    var token: String
+    var sessionID: String
     
     enum CodingKeys: String, CodingKey {
         case success
-        case expiresAt = "expires_at"
-        case token = "request_token"
+        case sessionID = "session_id"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.success = try container.decode(Bool.self, forKey: .success)
+        self.sessionID = try container.decode(String.self, forKey: .sessionID)
     }
 }
 

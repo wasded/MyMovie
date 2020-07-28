@@ -23,6 +23,12 @@
 		49E575BC24D00F8600E200EA /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575BB24D00F8600E200EA /* APIConstants.swift */; };
 		49E575BE24D0180A00E200EA /* CreateSessionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575BD24D0180A00E200EA /* CreateSessionResponse.swift */; };
 		49E575C024D018E500E200EA /* DefaultBackendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575BF24D018E500E200EA /* DefaultBackendController.swift */; };
+		49E575C524D020F000E200EA /* UserCredential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575C424D020F000E200EA /* UserCredential.swift */; };
+		49E575C924D0228C00E200EA /* DefaultCredentialStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575C724D0228C00E200EA /* DefaultCredentialStorage.swift */; };
+		49E575CA24D0228C00E200EA /* CredentialStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575C824D0228C00E200EA /* CredentialStorage.swift */; };
+		49E575CC24D023CE00E200EA /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575CB24D023CE00E200EA /* SessionManager.swift */; };
+		49E575CE24D024ED00E200EA /* DeleteSessionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575CD24D024ED00E200EA /* DeleteSessionResponse.swift */; };
+		49E575D024D0255500E200EA /* DefaultSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575CF24D0255500E200EA /* DefaultSessionManager.swift */; };
 		55CCFF5F2CF3062968E2B4F9 /* Pods_MyMovieTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF736D7F8A0ED0A1C89C431 /* Pods_MyMovieTests.framework */; };
 		8756E449FDBFE7D79083B5A3 /* Pods_MyMovie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDA3CBE9CEFEA387D8832514 /* Pods_MyMovie.framework */; };
 		EF8377894C70D9BE7AE5EDF2 /* Pods_MyMovie_MyMovieUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B105AEE43ECE38D6170B8CC /* Pods_MyMovie_MyMovieUITests.framework */; };
@@ -69,6 +75,12 @@
 		49E575BB24D00F8600E200EA /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
 		49E575BD24D0180A00E200EA /* CreateSessionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSessionResponse.swift; sourceTree = "<group>"; };
 		49E575BF24D018E500E200EA /* DefaultBackendController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackendController.swift; sourceTree = "<group>"; };
+		49E575C424D020F000E200EA /* UserCredential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCredential.swift; sourceTree = "<group>"; };
+		49E575C724D0228C00E200EA /* DefaultCredentialStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultCredentialStorage.swift; sourceTree = "<group>"; };
+		49E575C824D0228C00E200EA /* CredentialStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialStorage.swift; sourceTree = "<group>"; };
+		49E575CB24D023CE00E200EA /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		49E575CD24D024ED00E200EA /* DeleteSessionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteSessionResponse.swift; sourceTree = "<group>"; };
+		49E575CF24D0255500E200EA /* DefaultSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSessionManager.swift; sourceTree = "<group>"; };
 		7B105AEE43ECE38D6170B8CC /* Pods_MyMovie_MyMovieUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyMovie_MyMovieUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CF736D7F8A0ED0A1C89C431 /* Pods_MyMovieTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyMovieTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		940B5FFCA91C7051F06CE1DB /* Pods-MyMovie-MyMovieUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovie-MyMovieUITests.debug.xcconfig"; path = "Target Support Files/Pods-MyMovie-MyMovieUITests/Pods-MyMovie-MyMovieUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -145,8 +157,9 @@
 		49E5757924D0071D00E200EA /* MyMovie */ = {
 			isa = PBXGroup;
 			children = (
-				49E5757A24D0071D00E200EA /* AppDelegate.swift */,
+				49E575C224D0208600E200EA /* Service&Managers */,
 				49E575AF24D00E4500E200EA /* Server */,
+				49E5757A24D0071D00E200EA /* AppDelegate.swift */,
 				49E5757C24D0071D00E200EA /* SceneDelegate.swift */,
 				49E5757E24D0071D00E200EA /* ViewController.swift */,
 				49E5758024D0071D00E200EA /* Main.storyboard */,
@@ -198,8 +211,7 @@
 		49E575B124D00E5A00E200EA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				49E575B224D00E7600E200EA /* CreateRequestTokenResponse.swift */,
-				49E575BD24D0180A00E200EA /* CreateSessionResponse.swift */,
+				49E575C124D0206C00E200EA /* Authorization */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -212,6 +224,44 @@
 				49E575B724D00F5500E200EA /* NetworkWorker.swift */,
 			);
 			path = NetworkWorker;
+			sourceTree = "<group>";
+		};
+		49E575C124D0206C00E200EA /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				49E575BD24D0180A00E200EA /* CreateSessionResponse.swift */,
+				49E575B224D00E7600E200EA /* CreateRequestTokenResponse.swift */,
+				49E575CD24D024ED00E200EA /* DeleteSessionResponse.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
+		49E575C224D0208600E200EA /* Service&Managers */ = {
+			isa = PBXGroup;
+			children = (
+				49E575C324D020A600E200EA /* SessionManager */,
+				49E575C624D0227600E200EA /* CredentialStorage */,
+			);
+			path = "Service&Managers";
+			sourceTree = "<group>";
+		};
+		49E575C324D020A600E200EA /* SessionManager */ = {
+			isa = PBXGroup;
+			children = (
+				49E575CB24D023CE00E200EA /* SessionManager.swift */,
+				49E575CF24D0255500E200EA /* DefaultSessionManager.swift */,
+			);
+			path = SessionManager;
+			sourceTree = "<group>";
+		};
+		49E575C624D0227600E200EA /* CredentialStorage */ = {
+			isa = PBXGroup;
+			children = (
+				49E575C424D020F000E200EA /* UserCredential.swift */,
+				49E575C824D0228C00E200EA /* CredentialStorage.swift */,
+				49E575C724D0228C00E200EA /* DefaultCredentialStorage.swift */,
+			);
+			path = CredentialStorage;
 			sourceTree = "<group>";
 		};
 		83B46D1138D6D17BBD09CD64 /* Frameworks */ = {
@@ -463,14 +513,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49E575C524D020F000E200EA /* UserCredential.swift in Sources */,
 				49E575AE24D00DF300E200EA /* BackendAuthorizationController.swift in Sources */,
 				49E575B324D00E7600E200EA /* CreateRequestTokenResponse.swift in Sources */,
 				49E5757F24D0071D00E200EA /* ViewController.swift in Sources */,
+				49E575CA24D0228C00E200EA /* CredentialStorage.swift in Sources */,
 				49E5757B24D0071D00E200EA /* AppDelegate.swift in Sources */,
 				49E575BA24D00F5500E200EA /* NetworkWorker.swift in Sources */,
 				49E575BC24D00F8600E200EA /* APIConstants.swift in Sources */,
+				49E575CC24D023CE00E200EA /* SessionManager.swift in Sources */,
+				49E575C924D0228C00E200EA /* DefaultCredentialStorage.swift in Sources */,
 				49E575B924D00F5500E200EA /* DefaultNetworkWorker.swift in Sources */,
+				49E575D024D0255500E200EA /* DefaultSessionManager.swift in Sources */,
 				49E575C024D018E500E200EA /* DefaultBackendController.swift in Sources */,
+				49E575CE24D024ED00E200EA /* DeleteSessionResponse.swift in Sources */,
 				49E575BE24D0180A00E200EA /* CreateSessionResponse.swift in Sources */,
 				49E5757D24D0071D00E200EA /* SceneDelegate.swift in Sources */,
 				49E575B824D00F5500E200EA /* NetworkWorker+Error.swift in Sources */,
