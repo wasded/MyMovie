@@ -12,9 +12,19 @@ import Resolver
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, Resolving {
+    var window: UIWindow?
+    var appCoordinator: AppCoordinator!
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.registerDependencies()
 
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = UINavigationController()
+        self.window?.rootViewController?.view.backgroundColor = .white
+        self.window?.makeKeyAndVisible()
+        self.appCoordinator = AppCoordinator(rootViewController: self.window?.rootViewController as! UINavigationController, sessionManager: Resolver.resolve())
+        self.appCoordinator.start { }
+        
         return true
     }
 
@@ -34,6 +44,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Resolving {
 
     func registerDependencies() {
         resolver.register { DefaultNetworkWorker() as NetworkWorker}.scope(Resolver.application)
+        resolver.register { DefaultCredentialStorage() as CredentialStorage}.scope(Resolver.application)
+        resolver.register { DefaultBackendController(networkWorker: self.resolver.resolve(), credentialStorage: self.resolver.resolve()) as BackendAuthorizationController}.scope(Resolver.application)
+        resolver.register { DefaultSessionManager(backendController: self.resolver.resolve(), credentialStorage: self.resolver.resolve()) as SessionManager}.scope(Resolver.application)
     }
 }
 
