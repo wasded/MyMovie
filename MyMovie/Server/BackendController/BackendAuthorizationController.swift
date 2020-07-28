@@ -11,4 +11,5 @@ import Combine
 
 protocol BackendAuthorizationController: class {
     func createRequestToken() -> AnyPublisher<CreateRequestTokenResponse, Error>
+    func createSession(username: String, password: String, requestToken: String) -> AnyPublisher<CreateSessionResponse, Error>
 }
