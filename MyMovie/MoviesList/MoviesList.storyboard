@@ -7,28 +7,31 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Movie List View Controller-->
+        <!--Movies List View Controller-->
         <scene sceneID="hLf-Tx-VpA">
             <objects>
-                <viewController storyboardIdentifier="MovieList" id="440-Af-Z7T" customClass="MovieListViewController" customModule="MyMovie" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MoviesListViewController" id="440-Af-Z7T" customClass="MoviesListViewController" customModule="MyMovie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8VZ-mL-c2P">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SzE-xA-zfh">
-                                <rect key="frame" x="186" y="442.5" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ShD-Cm-cHT">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="SzE-xA-zfh" firstAttribute="centerY" secondItem="4wU-DN-bux" secondAttribute="centerY" id="h5G-fw-YMN"/>
-                            <constraint firstItem="SzE-xA-zfh" firstAttribute="centerX" secondItem="4wU-DN-bux" secondAttribute="centerX" id="oV9-zl-ClF"/>
+                            <constraint firstItem="4wU-DN-bux" firstAttribute="trailing" secondItem="ShD-Cm-cHT" secondAttribute="trailing" id="0QS-8s-cfd"/>
+                            <constraint firstItem="ShD-Cm-cHT" firstAttribute="top" secondItem="4wU-DN-bux" secondAttribute="top" id="OWF-IL-SXq"/>
+                            <constraint firstItem="4wU-DN-bux" firstAttribute="bottom" secondItem="ShD-Cm-cHT" secondAttribute="bottom" id="Wl6-r4-8lO"/>
+                            <constraint firstItem="ShD-Cm-cHT" firstAttribute="leading" secondItem="4wU-DN-bux" secondAttribute="leading" id="dbu-WN-I7a"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="4wU-DN-bux"/>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="ShD-Cm-cHT" id="aOq-s1-Np9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t0n-GX-ffH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIStoryboard {
-    static var movieListStoryboard: UIStoryboard {
-        return UIStoryboard(name: "MovieList", bundle: Bundle.main)
+    static var moviesListStoryboard: UIStoryboard {
+        return UIStoryboard(name: "MoviesList", bundle: Bundle.main)
     }
 }

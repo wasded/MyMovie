@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MovieListCoordinator: NavigationCoordinator {
+class MoviesListCoordinator: NavigationCoordinator {
     // MARK: - Proprties
     
     // MARK: Init
@@ -20,7 +20,7 @@ class MovieListCoordinator: NavigationCoordinator {
     }
     
     override func prepare() {
-        let viewController = UIStoryboard.movieListStoryboard.instantiateViewController(withIdentifier: "MovieList")
+        let viewController = MoviesListViewController.instantiate()
         self.root(viewController)
         super.prepare()
     }
