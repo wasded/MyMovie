@@ -22,12 +22,15 @@ class AppCoordinator: NavigationCoordinator {
     
     // MARK: - Methods
     override func start(with completion: @escaping () -> Void) {
+        self.rootViewController.navigationBar.isHidden = true
+        
         self.startMainCoordinator()
         super.start(with: completion)
     }
     
     func startMainCoordinator() {
         self.sessionManager.start()
+        
         let tabBarController = UITabBarController()
         let mainCooridnator = MainCoordinator(rootViewController: tabBarController)
         self.startChild(coordinator: mainCooridnator) {

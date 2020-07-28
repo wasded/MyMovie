@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MovieListViewController.swift
 //  MyMovie
 //
 //  Created by Andrey Bashkirtcev on 28.07.2020.
@@ -8,13 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class MovieListViewController: UIViewController {
+    // MARK: - Proprties
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
-
-
+    
+    // MARK: - Methods
 }
-

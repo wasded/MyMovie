@@ -16,7 +16,7 @@ enum MainCoordinatorError: Error {
 
 class MainCoordinator: TabBarCoordinator {
     enum Tabs: Int {
-        case profile = 0
+        case movieList = 0
     }
     
     // MARK: - Proprties
@@ -25,7 +25,21 @@ class MainCoordinator: TabBarCoordinator {
     
     // MARK: - Methods
     override func start(with completion: @escaping () -> Void = {}) {
+        let movieListItem = self.createMovieListPage()
+        let movieListCoordinator = MovieListCoordinator(rootViewController: movieListItem)
+        self.addTabCoordinator(coordinator: movieListCoordinator, tab: Tabs.movieList)
+        
+        self.startTabBarCoordinator(forSelected: movieListItem)
+        self.selectTab(.movieList)
+        
         super.start(with: completion)
+    }
+    
+    func createMovieListPage() -> UINavigationController {
+        let navigationController = UINavigationController()
+        navigationController.tabBarItem = UITabBarItem(title: NSLocalizedString("Profile", comment: ""), image: #imageLiteral(resourceName: "profileTabBar"), selectedImage: nil)
+        
+        return navigationController
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
