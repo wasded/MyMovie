@@ -6,6 +6,7 @@ target 'MyMovie' do
   use_frameworks!
 
   # Pods for MyMovie
+  pod "Resolver"
 
   target 'MyMovieTests' do
     inherit! :search_paths
