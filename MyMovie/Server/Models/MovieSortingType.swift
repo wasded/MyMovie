@@ -9,7 +9,7 @@
 import Foundation
 
 enum MovieSortingType: String, Codable {
-    case pupularityAsc = "popularity.asc"
+    case popularityAsc = "popularity.asc"
     case popularityDesc = "popularity.desc"
     case releaseDateAsc = "release_date.asc"
     case releaseDateDesc = "release_date.desc"

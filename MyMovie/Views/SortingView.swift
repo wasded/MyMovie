@@ -83,7 +83,7 @@ class SortingView: UIView {
         // sortingOrderButton
         self.addSubview(self.isAscOrderButton)
         self.isAscOrderButton.translatesAutoresizingMaskIntoConstraints = false
-        self.isAscOrderButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
+        self.isAscOrderButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.isAscOrderButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         self.isAscOrderButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
         self.setImageForButton(for: self.isAscOrder)
