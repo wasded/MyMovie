@@ -36,8 +36,8 @@ class MoviesListViewController: UIViewController {
     // MARK: - Proprties
     var soryType: SortType = .popularity
     
-    private lazy var segmentedControl: UISegmentedControl = {
-        return UISegmentedControl()
+    private lazy var filterView: SortingView = {
+        return SortingView()
     }()
     
     static func instantiate() -> MoviesListViewController {
@@ -63,10 +63,8 @@ class MoviesListViewController: UIViewController {
         self.title = "Фильмы"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "profileTabBar"), style: .plain, target: self, action: #selector(self.filterButtonDidTap(_:)))
 
+        self.filterView.frame = CGRect(x: 0, y: 0, width: 0, height: 42)
         
-        // segmented controll
-        for index in 0..<SortType.allCases.count {
-            self.segmentedControl.insertSegment(withTitle: SortType.allCases[index].getDescription(), at: index, animated: false)
-        }
+        self.tableView.tableHeaderView = self.filterView
     }
 }
