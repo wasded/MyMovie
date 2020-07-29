@@ -44,6 +44,8 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Methods
     func configureInterface() {
+        self.isSkeletonable = true
+        
         // posterView
         self.addSubview(self.posterView)
         self.posterView.translatesAutoresizingMaskIntoConstraints = false

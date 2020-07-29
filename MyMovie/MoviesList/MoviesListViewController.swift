@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import SkeletonView
 
 class MoviesListViewController: UIViewController {
     // MARK: - Outlets
@@ -50,17 +51,25 @@ class MoviesListViewController: UIViewController {
         self.collectionView.addSubview(self.sortingView)
 
         // collectionView
+        self.collectionView.isSkeletonable = true
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + 8 , left: 8, bottom: self.collectionView.contentInset.bottom, right: 8)
         self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: MovieCollectionViewCell.self))
+        self.collectionView.showAnimatedGradientSkeleton()
+        self.collectionView.prepareSkeleton { (done) in
+        }
+        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + 8 , left: 8, bottom: self.collectionView.contentInset.bottom, right: 8)
     }
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UIcollection
-extension MoviesListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MoviesListViewController: SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return 0
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -70,9 +79,16 @@ extension MoviesListViewController: UICollectionViewDelegate, UICollectionViewDa
         return cell
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        return CGSize(width: 100, height: 100)
-//    }
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return String(describing: MovieCollectionViewCell.self)
+    }
+    
+    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
+        return 1
+    }
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
+    }
 }
 
 // MARK: - SortingViewDelegate
@@ -96,6 +112,4 @@ extension MoviesListViewController: SortingViewDelegate {
             movieSortingType = isAscOrder ? .voteCountAsc : .voteAverageDesc
         }
     }
-    // call viewModel
-    
 }
