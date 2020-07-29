@@ -17,6 +17,7 @@ class MoviesListViewController: UIViewController {
         
     // MARK: - Proprties
     private lazy var sortingView = SortingView()
+    var items: [MovieDiscover] = []
     
     var viewModel: MoviesListViewModel!
     
@@ -30,6 +31,8 @@ class MoviesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureInterface()
+        self.bindingToProperties()
+        self.viewModel.loadMovies()
     }
     
     // MARK: - Actions
@@ -38,6 +41,22 @@ class MoviesListViewController: UIViewController {
     }
     
     // MARK: - Methods
+    private func bindingToProperties() {
+        self.viewModel.$discoveredMovies
+            .sink { (response) in
+                self.items = response
+        }
+        .store(in: &self.viewModel.cancellables)
+        
+        self.viewModel.$wasFirstLoad
+            .sink { (value) in
+                if value {
+                    self.collectionView.hideSkeleton()
+                }
+        }
+        .store(in: &self.viewModel.cancellables)
+    }
+    
     private func configureInterface() {
         // navigationBar
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -67,7 +86,7 @@ class MoviesListViewController: UIViewController {
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UIcollection
 extension MoviesListViewController: SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return self.items.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -76,8 +95,8 @@ extension MoviesListViewController: SkeletonCollectionViewDelegate, SkeletonColl
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MovieCollectionViewCell.self), for: indexPath) as! MovieCollectionViewCell
-        cell.layer.cornerRadius = 8
-        cell.data = MovieCollectionViewData(posterImage: "https://upload.wikimedia.org/wikipedia/ru/thumb/6/68/Trainspotting-poster.jpg/203px-Trainspotting-poster.jpg", titleLabel: "jooapsdpapdapsdpaspdpadp")
+        let data = self.items[indexPath.row]
+        cell.data = MovieCollectionViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title)
         return cell
     }
     

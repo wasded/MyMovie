@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		490D696024D1A1480061A472 /* MovieDiscover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D695F24D1A1480061A472 /* MovieDiscover.swift */; };
 		490D696324D1A1950061A472 /* PagingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D696224D1A1950061A472 /* PagingModel.swift */; };
+		490D696524D1AB720061A472 /* MovieDiscoverRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D696424D1AB720061A472 /* MovieDiscoverRequest.swift */; };
+		490D696724D1B35E0061A472 /* Encodable+Additionals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D696624D1B35E0061A472 /* Encodable+Additionals.swift */; };
 		49E5757B24D0071D00E200EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E5757A24D0071D00E200EA /* AppDelegate.swift */; };
 		49E5757D24D0071D00E200EA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E5757C24D0071D00E200EA /* SceneDelegate.swift */; };
 		49E5758224D0071D00E200EA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 49E5758024D0071D00E200EA /* Main.storyboard */; };
@@ -74,6 +76,8 @@
 		10CFF1CE39D0CC4BC5411075 /* Pods-MyMovie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovie.release.xcconfig"; path = "Target Support Files/Pods-MyMovie/Pods-MyMovie.release.xcconfig"; sourceTree = "<group>"; };
 		490D695F24D1A1480061A472 /* MovieDiscover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDiscover.swift; sourceTree = "<group>"; };
 		490D696224D1A1950061A472 /* PagingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingModel.swift; sourceTree = "<group>"; };
+		490D696424D1AB720061A472 /* MovieDiscoverRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDiscoverRequest.swift; sourceTree = "<group>"; };
+		490D696624D1B35E0061A472 /* Encodable+Additionals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+Additionals.swift"; sourceTree = "<group>"; };
 		49E5757724D0071D00E200EA /* MyMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49E5757A24D0071D00E200EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49E5757C24D0071D00E200EA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 			children = (
 				49E575F924D14C5A00E200EA /* MovieSortingType.swift */,
 				490D695F24D1A1480061A472 /* MovieDiscover.swift */,
+				490D696424D1AB720061A472 /* MovieDiscoverRequest.swift */,
 			);
 			path = Discover;
 			sourceTree = "<group>";
@@ -352,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				49E575E524D053BD00E200EA /* UIStoryboard+Name.swift */,
+				490D696624D1B35E0061A472 /* Encodable+Additionals.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -628,6 +634,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				49E575C524D020F000E200EA /* UserCredential.swift in Sources */,
+				490D696524D1AB720061A472 /* MovieDiscoverRequest.swift in Sources */,
 				49E575AE24D00DF300E200EA /* BackendAuthorizationController.swift in Sources */,
 				49E575DA24D04C3E00E200EA /* Coordinating.swift in Sources */,
 				49E575B324D00E7600E200EA /* CreateRequestTokenResponse.swift in Sources */,
@@ -638,6 +645,7 @@
 				49E575BA24D00F5500E200EA /* NetworkWorker.swift in Sources */,
 				49E575F624D06C8B00E200EA /* BubbleSegment.swift in Sources */,
 				49E575BC24D00F8600E200EA /* APIConstants.swift in Sources */,
+				490D696724D1B35E0061A472 /* Encodable+Additionals.swift in Sources */,
 				490D696024D1A1480061A472 /* MovieDiscover.swift in Sources */,
 				49E575FA24D14C5A00E200EA /* MovieSortingType.swift in Sources */,
 				49E575FC24D15F7E00E200EA /* MovieCollectionViewCell.swift in Sources */,

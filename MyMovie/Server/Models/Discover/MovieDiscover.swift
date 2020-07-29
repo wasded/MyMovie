@@ -12,10 +12,10 @@ struct MovieDiscover: Codable {
     let popularity: Double
     let voteCount: Int
     let video: Bool
-    let posterPath: String
+    let posterPath: String?
     let id: Int
     let adult: Bool
-    let backdropPath: String
+    let backdropPath: String?
     let originalLanguage: String
     let originalTitle: String
     let genreIDS: [Int]
@@ -39,5 +39,13 @@ struct MovieDiscover: Codable {
         case voteAverage = "vote_average"
         case overview
         case releaseDate = "release_date"
+    }
+    
+    func getPosterURL(posterType: APIConstants.PosterType) -> URL? {
+        if let posterPath = self.posterPath {
+            return URL(string: String(format: "%@/%@/%@", APIConstants.urlOriginalPoster, posterType.getURLParameter(), posterPath))
+        } else {
+            return nil
+        }
     }
 }

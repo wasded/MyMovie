@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct PagingModel<T: Decodable>: Decodable {
+struct PagingModel<T: Codable>: Codable {
     let page: Int
     let totalResults: Int
     let totalPages: Int

@@ -11,7 +11,7 @@ import SDWebImage
 import SkeletonView
 
 struct MovieCollectionViewData {
-    var posterImage: String?
+    var urlPoster: URL?
     var titleLabel: String?
 }
 
@@ -44,18 +44,22 @@ class MovieCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Methods
     func configureInterface() {
+        // self
         self.isSkeletonable = true
+        self.skeletonCornerRadius = 8
         
         // posterView
         self.addSubview(self.posterView)
         self.posterView.translatesAutoresizingMaskIntoConstraints = false
-        self.posterView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        self.posterView.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
         self.posterView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.posterView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         self.posterView.heightAnchor.constraint(equalToConstant: 160).isActive = true
         self.posterView.widthAnchor.constraint(equalToConstant: 110).isActive = true
-        self.posterView.contentMode = .scaleAspectFit
+        self.posterView.contentMode = .scaleAspectFill
         self.posterView.isSkeletonable = true
+        self.posterView.layer.cornerRadius = 8
+        self.posterView.layer.masksToBounds = true
         
         // titleLabel
         self.addSubview(self.titleLabel)
@@ -73,10 +77,13 @@ class MovieCollectionViewCell: UICollectionViewCell {
         guard let data = data else { return }
         self.titleLabel.text = data.titleLabel
         self.posterView.showAnimatedGradientSkeleton()
-        self.posterView.sd_setImage(with: URL(string: data.posterImage ?? ""), placeholderImage: nil) { (_, error, _, _) in
-            self.posterView.hideSkeleton()
-            if let _ = error {
 
+        UIView.animate(withDuration: 0) {
+            self.posterView.sd_setImage(with: data.urlPoster, placeholderImage: nil) { (_, error, _, _) in
+                self.posterView.hideSkeleton()
+                if let _ = error {
+
+                }
             }
         }
     }
