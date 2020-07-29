@@ -9,18 +9,20 @@
 import UIKit
 import Foundation
 import SkeletonView
+import SwiftUI
 
 class MoviesListViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
-    
+        
     // MARK: - Proprties
-    private lazy var sortingView: SortingView = {
-        return SortingView()
-    }()
+    private lazy var sortingView = SortingView()
     
-    static func instantiate() -> MoviesListViewController {
+    var viewModel: MoviesListViewModel!
+    
+    static func instantiate(viewModel: MoviesListViewModel) -> MoviesListViewController {
         let viewController = UIStoryboard.moviesListStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesListViewController.self)) as! MoviesListViewController
+        viewController.viewModel = viewModel
         return viewController
     }
     
