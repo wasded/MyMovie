@@ -7,6 +7,8 @@ target 'MyMovie' do
 
   # Pods for MyMovie
   pod "Resolver"
+  pod 'SDWebImage'
+  pod "SkeletonView"
 
   target 'MyMovieTests' do
     inherit! :search_paths
