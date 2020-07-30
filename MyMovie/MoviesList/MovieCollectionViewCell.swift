@@ -82,7 +82,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
             self.posterView.sd_setImage(with: data.urlPoster, placeholderImage: nil) { (_, error, _, _) in
                 self.posterView.hideSkeleton()
                 if let _ = error {
-
+                    self.posterView.image = nil
                 }
             }
         }

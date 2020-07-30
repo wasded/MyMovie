@@ -36,7 +36,16 @@ class MoviesListViewModel {
     private func bindingToProperties() {
         Publishers.CombineLatest3(self.$currentPage, self.$filter, self.$sortType)
             .sink(receiveValue: { (value) in
-                self.loadMovies(page: value.0, sortBy: value.2)
+                var page = value.0
+                let filter = value.1
+                let sortType = value.2
+                
+                if self.filter != filter || self.sortType != sortType {
+                    self.currentPage = 1
+                    page = 1
+                }
+                
+                self.loadMovies(page: page, sortBy: sortType)
             })
         .store(in: &self.cancellables)
     }
@@ -49,7 +58,7 @@ class MoviesListViewModel {
             }) { (response) in
                 self.wasFirstLoad = true // Пока не могу придумать способа лучше и быстрее
                 
-                if response.page == self.currentPage {
+                if response.page == self.currentPage { // не хорошая проверка, по хорошему надо все остальные запросы останавливать
                     if response.page == 1 {
                         self.discoveredMovies = response.results
                     } else {

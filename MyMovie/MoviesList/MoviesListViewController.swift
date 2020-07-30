@@ -73,11 +73,12 @@ class MoviesListViewController: UIViewController {
         let sortingViewHeight: CGFloat = 42
         let leftEdgeInsent: CGFloat = 8
         let rightEdgeInsent: CGFloat = 8
+        let topSortingViewPadding: CGFloat = 8
         
         self.sortingView.frame = CGRect(x: 0, y: 0, width: 0, height: sortingViewHeight)
         self.sortingView.delegate = self
         
-        self.sortingView.frame = CGRect(x: 0, y: -sortingViewHeight + self.collectionView.contentInset.top - 8, width: self.view.frame.width, height: sortingViewHeight)
+        self.sortingView.frame = CGRect(x: 0, y: -sortingViewHeight + self.collectionView.contentInset.top - topSortingViewPadding, width: self.view.frame.width, height: sortingViewHeight)
         self.collectionView.addSubview(self.sortingView)
 
         // collectionView
@@ -88,7 +89,7 @@ class MoviesListViewController: UIViewController {
         self.collectionView.showAnimatedGradientSkeleton()
         self.collectionView.prepareSkeleton { (done) in
         }
-        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + 8 , left: leftEdgeInsent, bottom: self.collectionView.contentInset.bottom, right: rightEdgeInsent)
+        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + topSortingViewPadding , left: leftEdgeInsent, bottom: self.collectionView.contentInset.bottom, right: rightEdgeInsent)
     }
     
     private func needLoadNewMovies(indexPath: IndexPath) -> Bool {
