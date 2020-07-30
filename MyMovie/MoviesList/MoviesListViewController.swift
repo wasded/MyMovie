@@ -8,18 +8,22 @@
 
 import UIKit
 import Foundation
+import SkeletonView
+import SwiftUI
 
 class MoviesListViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
-    
+        
     // MARK: - Proprties
-    private lazy var sortingView: SortingView = {
-        return SortingView()
-    }()
+    private lazy var sortingView = SortingView()
+    var items: [MovieDiscover] = []
     
-    static func instantiate() -> MoviesListViewController {
+    var viewModel: MoviesListViewModel!
+    
+    static func instantiate(viewModel: MoviesListViewModel) -> MoviesListViewController {
         let viewController = UIStoryboard.moviesListStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesListViewController.self)) as! MoviesListViewController
+        viewController.viewModel = viewModel
         return viewController
     }
     
@@ -27,6 +31,8 @@ class MoviesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureInterface()
+        self.bindingToProperties()
+        self.viewModel.loadMovies()
     }
     
     // MARK: - Actions
@@ -35,6 +41,22 @@ class MoviesListViewController: UIViewController {
     }
     
     // MARK: - Methods
+    private func bindingToProperties() {
+        self.viewModel.$discoveredMovies
+            .sink { (response) in
+                self.items = response
+        }
+        .store(in: &self.viewModel.cancellables)
+        
+        self.viewModel.$wasFirstLoad
+            .sink { (value) in
+                if value {
+                    self.collectionView.hideSkeleton()
+                }
+        }
+        .store(in: &self.viewModel.cancellables)
+    }
+    
     private func configureInterface() {
         // navigationBar
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -42,77 +64,51 @@ class MoviesListViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "profileTabBar"), style: .plain, target: self, action: #selector(self.filterButtonDidTap(_:)))
 
         // sortingView
-        self.sortingView.frame = CGRect(x: 0, y: 0, width: 0, height: 42)
+        let sortingViewHeight: CGFloat = 42
+        self.sortingView.frame = CGRect(x: 0, y: 0, width: 0, height: sortingViewHeight)
         self.sortingView.delegate = self
-        //self.collectionView.asssignCustomHeaderView(headerView: self.sortingView)
-        let height = self.sortingView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        self.sortingView.frame = CGRect(x: 0, y: -height + self.collectionView.contentInset.top - 8, width: self.collectionView.frame.width, height: height)
+        
+        self.sortingView.frame = CGRect(x: 0, y: -sortingViewHeight + self.collectionView.contentInset.top - 8, width: self.collectionView.frame.width, height: sortingViewHeight)
         self.collectionView.addSubview(self.sortingView)
-        self.collectionView.contentInset = UIEdgeInsets(top: height + 8 , left: 8, bottom: self.collectionView.contentInset.bottom, right: 8)
 
         // collectionView
+        self.collectionView.isSkeletonable = true
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        self.collectionView.register(CustomCell.self, forCellWithReuseIdentifier: String(describing: CustomCell.self))
-        
-        
-//        if let flowLayout = self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-//            flowLayout.estimatedItemSize = CGSize(
-//        }
+        self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: MovieCollectionViewCell.self))
+        self.collectionView.showAnimatedGradientSkeleton()
+        self.collectionView.prepareSkeleton { (done) in
+        }
+        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + 8 , left: 8, bottom: self.collectionView.contentInset.bottom, right: 8)
     }
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UIcollection
-extension MoviesListViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MoviesListViewController: SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return self.items.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: CustomCell.self), for: indexPath)
-        cell.backgroundColor = .red
+        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MovieCollectionViewCell.self), for: indexPath) as! MovieCollectionViewCell
+        let data = self.items[indexPath.row]
+        cell.data = MovieCollectionViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title)
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
-    }
-}
-
-class CustomCell: UICollectionViewCell {
-    
-}
-
-extension UICollectionView {
-    var CustomCollectionViewHeaderTag: Int {
-        return 12345678
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return String(describing: MovieCollectionViewCell.self)
     }
     
-    var currentCustomHeaderView: UIView? {
-        return self.viewWithTag(CustomCollectionViewHeaderTag)
+    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
+        return 1
     }
-
-    func asssignCustomHeaderView(headerView: UIView, sideMarginInsets: CGFloat = 0) {
-        guard self.viewWithTag(CustomCollectionViewHeaderTag) == nil else {
-            return
-        }
-        let height = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        headerView.frame = CGRect(x: sideMarginInsets, y: -height + self.contentInset.top, width: self.frame.width - (2 * sideMarginInsets), height: height)
-        headerView.tag = CustomCollectionViewHeaderTag
-        self.addSubview(headerView)
-        self.contentInset = UIEdgeInsets(top: height, left: self.contentInset.left, bottom: self.contentInset.bottom, right: self.contentInset.right)
-    }
-
-    func removeCustomHeaderView() {
-        if let customHeaderView = self.viewWithTag(CustomCollectionViewHeaderTag) {
-            let headerHeight = customHeaderView.frame.height
-            customHeaderView.removeFromSuperview()
-            self.contentInset = UIEdgeInsets(top: self.contentInset.top - headerHeight, left: self.contentInset.left, bottom: self.contentInset.bottom, right: self.contentInset.right)
-        }
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 20
     }
 }
 
@@ -137,6 +133,4 @@ extension MoviesListViewController: SortingViewDelegate {
             movieSortingType = isAscOrder ? .voteCountAsc : .voteAverageDesc
         }
     }
-    // call viewModel
-    
 }

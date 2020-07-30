@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Resolver
 
 class MoviesListCoordinator: NavigationCoordinator {
     // MARK: - Proprties
@@ -20,7 +21,7 @@ class MoviesListCoordinator: NavigationCoordinator {
     }
     
     override func prepare() {
-        let viewController = MoviesListViewController.instantiate()
+        let viewController = MoviesListViewController.instantiate(viewModel: MoviesListViewModel(backendController: Resolver.resolve()))
         self.root(viewController)
         super.prepare()
     }

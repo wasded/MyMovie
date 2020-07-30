@@ -19,8 +19,23 @@ public enum HTTPError: LocalizedError, Error, Identifiable {
 }
 
 public struct APIConstants {
+    enum PosterType {
+        case original
+        case custom(Int)
+        
+        func getURLParameter() -> String {
+            switch self {
+            case .original:
+                return "original"
+            case .custom(let width):
+                return "w\(width)"
+            }
+        }
+    }
+    
     public static let codeTimeout = 40
     public static let baseURL = "https://api.themoviedb.org/3"
+    public static let urlOriginalPoster = "http://image.tmdb.org/t/p/"
     public static let apiKey = "ee044de647ad25b4f147aa2142bd2693"
     
     static let jsonDecoder: JSONDecoder = {

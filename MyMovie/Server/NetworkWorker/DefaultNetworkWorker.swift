@@ -111,7 +111,7 @@ class DefaultNetworkWorker: NetworkWorker {
             guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
                 throw InternalError.invalidUrl("Cant create URL components from url: \(url)")
             }
-            components.queryItems = queryParameters.map({ (key, value) -> URLQueryItem in
+            components.queryItems = queryParameters.compactMap({ (key, value) -> URLQueryItem in
                 return URLQueryItem(name: key, value: "\(value)")
             })
             guard let newUrl = components.url else {
