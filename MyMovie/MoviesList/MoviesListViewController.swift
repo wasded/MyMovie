@@ -17,7 +17,13 @@ class MoviesListViewController: UIViewController {
         
     // MARK: - Proprties
     private lazy var sortingView = SortingView()
-    var items: [MovieDiscover] = []
+    var items: [MovieDiscover] = [] {
+        didSet {
+            if self.items != oldValue {
+                self.collectionView.reloadData()
+            }
+        }
+    }
     
     var viewModel: MoviesListViewModel!
     
@@ -32,7 +38,7 @@ class MoviesListViewController: UIViewController {
         super.viewDidLoad()
         self.configureInterface()
         self.bindingToProperties()
-        self.viewModel.loadMovies()
+        self.viewModel.start()
     }
     
     // MARK: - Actions
@@ -65,10 +71,13 @@ class MoviesListViewController: UIViewController {
 
         // sortingView
         let sortingViewHeight: CGFloat = 42
+        let leftEdgeInsent: CGFloat = 8
+        let rightEdgeInsent: CGFloat = 8
+        
         self.sortingView.frame = CGRect(x: 0, y: 0, width: 0, height: sortingViewHeight)
         self.sortingView.delegate = self
         
-        self.sortingView.frame = CGRect(x: 0, y: -sortingViewHeight + self.collectionView.contentInset.top - 8, width: self.collectionView.frame.width, height: sortingViewHeight)
+        self.sortingView.frame = CGRect(x: 0, y: -sortingViewHeight + self.collectionView.contentInset.top - 8, width: self.view.frame.width, height: sortingViewHeight)
         self.collectionView.addSubview(self.sortingView)
 
         // collectionView
@@ -79,7 +88,11 @@ class MoviesListViewController: UIViewController {
         self.collectionView.showAnimatedGradientSkeleton()
         self.collectionView.prepareSkeleton { (done) in
         }
-        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + 8 , left: 8, bottom: self.collectionView.contentInset.bottom, right: 8)
+        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + 8 , left: leftEdgeInsent, bottom: self.collectionView.contentInset.bottom, right: rightEdgeInsent)
+    }
+    
+    private func needLoadNewMovies(indexPath: IndexPath) -> Bool {
+        return self.items.count - 3 == indexPath.row
     }
 }
 
@@ -95,6 +108,11 @@ extension MoviesListViewController: SkeletonCollectionViewDelegate, SkeletonColl
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MovieCollectionViewCell.self), for: indexPath) as! MovieCollectionViewCell
+        
+        if self.needLoadNewMovies(indexPath: indexPath) {
+            self.viewModel.currentPage += 1
+        }
+        
         let data = self.items[indexPath.row]
         cell.data = MovieCollectionViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title)
         return cell
@@ -130,7 +148,9 @@ extension MoviesListViewController: SortingViewDelegate {
         case .voteAverage:
             movieSortingType = isAscOrder ? .voteAverageAsc : .voteAverageDesc
         case .voteCount:
-            movieSortingType = isAscOrder ? .voteCountAsc : .voteAverageDesc
+            movieSortingType = isAscOrder ? .voteCountAsc : .voteCountDesc
         }
+        
+        self.viewModel.sortType = movieSortingType
     }
 }

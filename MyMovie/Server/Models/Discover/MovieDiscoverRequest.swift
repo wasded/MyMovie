@@ -12,7 +12,7 @@ struct MovieDiscoverRequest: Codable {
     // MARK: - Properties
     var language: String?
     var region: String?
-    var sortBy: String?
+    var sortBy: MovieSortingType?
     var certificationCountry: String?
     var certification: String?
     var certificationLte: String?
@@ -79,7 +79,7 @@ struct MovieDiscoverRequest: Codable {
     }
     
     // MARK: - Init
-    init(language: String? = nil, region: String? = nil, sortBy: String? = nil, certificationCountry: String? = nil, certification: String? = nil, certificationLte: String? = nil, certificationGte: String? = nil, includeAdult: Bool? = nil, includeVideo: Bool? = nil, page: Int? = nil, primaryReleaseYear: Int? = nil, primaryReleaseDateLte: String? = nil, primaryReleaseDateGte: String? = nil, releaseDateLte: String? = nil, releaseDateGte: String? = nil, withReleaseType: Int? = nil, year: Int? = nil, voteCountLte: Double? = nil, voteCountGte: Double? = nil, voteAverageLte: Double? = nil, voteAverageGte: Double? = nil, withCast: String? = nil, withCrew: String? = nil, withPeople: String? = nil, withCompanies: String? = nil, withGenres: String? = nil, withoutGenres: String? = nil, withKeywords: String? = nil, withoutKeywords: String? = nil, withRuntimeLte: String? = nil, withRuntimeGte: String? = nil, withOriginalLanguage: String? = nil) {
+    init(language: String? = nil, region: String? = nil, sortBy: MovieSortingType? = nil, certificationCountry: String? = nil, certification: String? = nil, certificationLte: String? = nil, certificationGte: String? = nil, includeAdult: Bool? = nil, includeVideo: Bool? = nil, page: Int? = nil, primaryReleaseYear: Int? = nil, primaryReleaseDateLte: String? = nil, primaryReleaseDateGte: String? = nil, releaseDateLte: String? = nil, releaseDateGte: String? = nil, withReleaseType: Int? = nil, year: Int? = nil, voteCountLte: Double? = nil, voteCountGte: Double? = nil, voteAverageLte: Double? = nil, voteAverageGte: Double? = nil, withCast: String? = nil, withCrew: String? = nil, withPeople: String? = nil, withCompanies: String? = nil, withGenres: String? = nil, withoutGenres: String? = nil, withKeywords: String? = nil, withoutKeywords: String? = nil, withRuntimeLte: String? = nil, withRuntimeGte: String? = nil, withOriginalLanguage: String? = nil) {
         self.language = language
         self.region = region
         self.sortBy = sortBy

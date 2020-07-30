@@ -49,3 +49,5 @@ struct MovieDiscover: Codable {
         }
     }
 }
+
+extension MovieDiscover: Equatable { }
