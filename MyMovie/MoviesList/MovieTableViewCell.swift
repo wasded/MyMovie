@@ -9,6 +9,7 @@
 import UIKit
 import SDWebImage
 import SkeletonView
+import Cosmos
 
 struct MovieTableViewData {
     var urlPoster: URL?
@@ -24,12 +25,13 @@ class MovieTableViewCell: UITableViewCell {
     let posterView = UIImageView()
     let titleLabel = UILabel()
     let additionalMovieInfoLabel = UILabel()
-    let voteAverageView = UIView()
+    let voteAverageView = CosmosView()
     let descriptionLabel = UILabel()
+    let containerView = UIView()
     
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YYYY"
+        dateFormatter.dateFormat = "YYYY г."
         return dateFormatter
     }()
     
@@ -61,26 +63,34 @@ class MovieTableViewCell: UITableViewCell {
         self.isSkeletonable = true
         self.skeletonCornerRadius = 8
         
+        // containerView
+        self.addSubview(self.containerView)
+        self.containerView.translatesAutoresizingMaskIntoConstraints = false
+        self.containerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
+        self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
+        self.containerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+        self.containerView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        
         // posterView
-        self.addSubview(self.posterView)
+        self.containerView.addSubview(self.posterView)
         self.posterView.translatesAutoresizingMaskIntoConstraints = false
-        self.posterView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
-        self.posterView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
-        self.posterView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
-        self.posterView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        self.posterView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 0).isActive = true
+        self.posterView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: 0).isActive = true
+        self.posterView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 0).isActive = true
         self.posterView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         self.posterView.layer.cornerRadius = 8
         self.posterView.layer.masksToBounds = true
         self.posterView.clipsToBounds = true
-        self.posterView.contentMode = .scaleAspectFit
+        self.posterView.contentMode = .scaleToFill
         self.posterView.isSkeletonable = true
         
         // titleLabel
-        self.addSubview(self.titleLabel)
+        self.containerView.addSubview(self.titleLabel)
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
+        self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 0).isActive = true
         self.titleLabel.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 8).isActive = true
-        self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
+        self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0).isActive = true
         self.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         self.titleLabel.textColor = .black
         self.titleLabel.textAlignment = .left
@@ -88,11 +98,11 @@ class MovieTableViewCell: UITableViewCell {
         self.titleLabel.numberOfLines = 1
         
         // additionalMovieInfoLabel
-        self.addSubview(self.additionalMovieInfoLabel)
+        self.containerView.addSubview(self.additionalMovieInfoLabel)
         self.additionalMovieInfoLabel.translatesAutoresizingMaskIntoConstraints = false
         self.additionalMovieInfoLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 8).isActive = true
         self.additionalMovieInfoLabel.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 8).isActive = true
-        self.additionalMovieInfoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
+        self.additionalMovieInfoLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0).isActive = true
         self.additionalMovieInfoLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         self.additionalMovieInfoLabel.textColor = .darkGray
         self.additionalMovieInfoLabel.lineBreakMode = .byTruncatingTail
@@ -100,32 +110,42 @@ class MovieTableViewCell: UITableViewCell {
         self.additionalMovieInfoLabel.numberOfLines = 2
         
         // voteAverageView
-        self.addSubview(self.voteAverageView)
+        self.containerView.addSubview(self.voteAverageView)
         self.voteAverageView.translatesAutoresizingMaskIntoConstraints = false
-        self.voteAverageView.topAnchor.constraint(equalTo: self.additionalMovieInfoLabel.bottomAnchor, constant: 8).isActive = true
+        self.voteAverageView.topAnchor.constraint(equalTo: self.additionalMovieInfoLabel.bottomAnchor, constant: 16).isActive = true
         self.voteAverageView.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 8).isActive = true
-        self.voteAverageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
+        self.voteAverageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0).isActive = true
+        self.voteAverageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        self.voteAverageView.settings.starSize = 24
+        self.voteAverageView.settings.fillMode = .half
+        self.voteAverageView.settings.updateOnTouch = false
+        self.voteAverageView.settings.disablePanGestures = true
+        self.voteAverageView.contentMode = .center
         
         // descriptionLabel
-        self.addSubview(self.descriptionLabel)
+        self.containerView.addSubview(self.descriptionLabel)
         self.descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.descriptionLabel.topAnchor.constraint(equalTo: self.voteAverageView.bottomAnchor, constant: 8).isActive = true
+        self.descriptionLabel.topAnchor.constraint(equalTo: self.voteAverageView.bottomAnchor, constant: 16).isActive = true
         self.descriptionLabel.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 8).isActive = true
-        self.descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8).isActive = true
-        self.descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: self.posterView.bottomAnchor, constant: 0).isActive = true
+        self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0).isActive = true
+        self.descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: self.containerView.bottomAnchor, constant: 0).isActive = true
         self.descriptionLabel.lineBreakMode = .byTruncatingTail
-        self.descriptionLabel.numberOfLines = 6
+        self.descriptionLabel.numberOfLines = 0
         self.descriptionLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         self.descriptionLabel.textColor = .darkGray
+        self.descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
     }
     
     private func updateInterface() {
-        guard let data = data else { return }
+        guard let data = self.data else { return }
         self.titleLabel.text = data.titleLabel
         
         self.additionalMovieInfoLabel.text = String(format: "%@ %@", self.dateFormatter.string(from: data.releaseDate), data.genres.joined(separator: "/"))
         
         self.descriptionLabel.text = data.description
+        
+        self.voteAverageView.settings.totalStars = 5
+        self.voteAverageView.rating = data.voteAverage / 2
         
         self.posterView.showAnimatedGradientSkeleton()
         UIView.animate(withDuration: 0) {
@@ -134,7 +154,9 @@ class MovieTableViewCell: UITableViewCell {
                 guard let self = self else { return }
                 self.posterView.hideSkeleton()
                 if let _ = error {
-                    self.posterView.image = nil
+                    UIView.animate(withDuration: 0) {
+                        self.posterView.image = nil
+                    }
                 }
             }
         }

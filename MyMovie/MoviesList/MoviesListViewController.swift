@@ -98,7 +98,7 @@ extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         let data = self.items[indexPath.row]
-        cell.data = MovieTableViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title, releaseDate: Date(), genres: ["asdad"], voteAverage: 5.5, description: "askdlamskdlajskld jkals jaslkd ajsldk jalksdj alksdj askd ")
+        cell.data = MovieTableViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title, releaseDate: data.releaseDate, genres: data.genreIDS.map({ $0.name }), voteAverage: data.voteAverage, description: data.overview)
         return cell
     }
 }

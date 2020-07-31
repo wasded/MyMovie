@@ -83,7 +83,8 @@ class SortingView: UIView {
         // sortingOrderButton
         self.addSubview(self.isAscOrderButton)
         self.isAscOrderButton.translatesAutoresizingMaskIntoConstraints = false
-        self.isAscOrderButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8).isActive = true
+        // FIXME: - Все констрейнты по сторонам должны быть 0
+        self.isAscOrderButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.isAscOrderButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         self.isAscOrderButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
         self.setImageForButton(for: self.isAscOrder)
@@ -116,12 +117,13 @@ class SortingView: UIView {
         self.isAscOrderButton.setImage(isAscOrder ? #imageLiteral(resourceName: "profileTabBar") : #imageLiteral(resourceName: "profileTabBar"), for: .normal)
     }
     
-    @objc func isAscOrderButtonDidTap(_ sender: UIButton) {
-        self.isAscOrder.toggle()
-    }
-    
     private func sortingDidChanged() {
         let selectedSortingType = self.sortingTypes[self.bubbleSegment.selectIndex]
         self.delegate?.valueChanged(sortingType: selectedSortingType, isAscOrder: self.isAscOrder)
+    }
+    
+    // MARK: - Actions
+    @objc func isAscOrderButtonDidTap(_ sender: UIButton) {
+        self.isAscOrder.toggle()
     }
 }

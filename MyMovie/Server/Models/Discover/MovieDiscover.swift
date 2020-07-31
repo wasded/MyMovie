@@ -18,7 +18,7 @@ struct MovieDiscover: Codable {
     let backdropPath: String?
     let originalLanguage: String
     let originalTitle: String
-    let genreIDS: [Int]
+    let genreIDS: [MovieGenre]
     let title: String
     let voteAverage: Double
     let overview: String
@@ -52,7 +52,7 @@ struct MovieDiscover: Codable {
         self.backdropPath = try container.decode(String?.self, forKey: .backdropPath)
         self.originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
         self.originalTitle = try container.decode(String.self, forKey: .originalTitle)
-        self.genreIDS = try container.decode([Int].self, forKey: .genreIDS)
+        self.genreIDS = try container.decode([MovieGenre].self, forKey: .genreIDS)
         self.title = try container.decode(String.self, forKey: .title)
         self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         self.overview = try container.decode(String.self, forKey: .overview)
