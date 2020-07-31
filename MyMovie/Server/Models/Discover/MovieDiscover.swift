@@ -22,7 +22,7 @@ struct MovieDiscover: Codable {
     let title: String
     let voteAverage: Double
     let overview: String
-    let releaseDate: String
+    let releaseDate: Date
 
     enum CodingKeys: String, CodingKey {
         case popularity
@@ -41,6 +41,29 @@ struct MovieDiscover: Codable {
         case releaseDate = "release_date"
     }
     
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.popularity = try container.decode(Double.self, forKey: .popularity)
+        self.voteCount = try container.decode(Int.self, forKey: .voteCount)
+        self.video = try container.decode(Bool.self, forKey: .video)
+        self.posterPath = try container.decode(String?.self, forKey: .posterPath)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.adult = try container.decode(Bool.self, forKey: .adult)
+        self.backdropPath = try container.decode(String?.self, forKey: .backdropPath)
+        self.originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
+        self.originalTitle = try container.decode(String.self, forKey: .originalTitle)
+        self.genreIDS = try container.decode([Int].self, forKey: .genreIDS)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        self.overview = try container.decode(String.self, forKey: .overview)
+        
+        let releaseDate = try container.decode(String.self, forKey: .releaseDate)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-DD"
+        
+        self.releaseDate = dateFormatter.date(from: releaseDate) ?? Date()
+    }
+    
     func getPosterURL(posterType: APIConstants.PosterType) -> URL? {
         if let posterPath = self.posterPath {
             return URL(string: String(format: "%@/%@/%@", APIConstants.urlOriginalPoster, posterType.getURLParameter(), posterPath))
@@ -49,3 +72,5 @@ struct MovieDiscover: Codable {
         }
     }
 }
+
+extension MovieDiscover: Equatable { }

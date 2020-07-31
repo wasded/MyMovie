@@ -15,7 +15,9 @@ class MoviesListViewModel {
     @Injected var backendController: BackendDiscoverController
     
     @Published var discoveredMovies: [MovieDiscover] = []
-    @Published var wasFirstLoad: Bool = false
+    @Published var sortType: MovieSortingType = .popularityDesc
+    @Published var filter: Int = 0
+    @Published var currentPage: Int = 1
     
     var cancellables: Set<AnyCancellable> = []
     
@@ -24,14 +26,41 @@ class MoviesListViewModel {
         self.backendController = backendController
     }
     
+    func start() {
+        self.bindingToProperties()
+        self.loadMovies(page: self.currentPage, sortBy: self.sortType)
+    }
+    
+    private func bindingToProperties() {
+        Publishers.CombineLatest3(self.$currentPage, self.$filter, self.$sortType)
+            .sink(receiveValue: { (value) in
+                var page = value.0
+                let filter = value.1
+                let sortType = value.2
+                
+                if self.filter != filter || self.sortType != sortType {
+                    self.currentPage = 1
+                    page = 1
+                }
+                
+                self.loadMovies(page: page, sortBy: sortType)
+            })
+        .store(in: &self.cancellables)
+    }
+    
     // MARK: - Mehtods
-    func loadMovies() {
-        self.backendController.getMovies(model: MovieDiscoverRequest())
+    func loadMovies(page: Int, sortBy: MovieSortingType) {
+        self.backendController.getMovies(model: MovieDiscoverRequest(sortBy: sortBy, page: page))
             .sink(receiveCompletion: { (completion) in
                 print()
             }) { (response) in
-                self.wasFirstLoad = true // Пока не могу придумать способа лучше и быстрее
-                self.discoveredMovies = response.results
+                if response.page == self.currentPage { // не хорошая проверка, по хорошему надо все остальные запросы останавливать
+                    if response.page == 1 {
+                        self.discoveredMovies = response.results
+                    } else {
+                        self.discoveredMovies.append(contentsOf: response.results)
+                    }
+                }
         }
         .store(in: &self.cancellables)
     }
