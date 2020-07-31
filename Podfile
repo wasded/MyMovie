@@ -9,6 +9,7 @@ target 'MyMovie' do
   pod "Resolver"
   pod 'SDWebImage'
   pod "SkeletonView"
+  pod "Cosmos"
 
   target 'MyMovieTests' do
     inherit! :search_paths
