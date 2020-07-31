@@ -13,14 +13,14 @@ import SwiftUI
 
 class MoviesListViewController: UIViewController {
     // MARK: - Outlets
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var tableView: UITableView!
         
     // MARK: - Proprties
     private lazy var sortingView = SortingView()
     var items: [MovieDiscover] = [] {
         didSet {
             if self.items != oldValue {
-                self.collectionView.reloadData()
+                self.tableView.reloadData()
             }
         }
     }
@@ -53,14 +53,6 @@ class MoviesListViewController: UIViewController {
                 self.items = response
         }
         .store(in: &self.viewModel.cancellables)
-        
-        self.viewModel.$wasFirstLoad
-            .sink { (value) in
-                if value {
-                    self.collectionView.hideSkeleton()
-                }
-        }
-        .store(in: &self.viewModel.cancellables)
     }
     
     private func configureInterface() {
@@ -71,25 +63,20 @@ class MoviesListViewController: UIViewController {
 
         // sortingView
         let sortingViewHeight: CGFloat = 42
-        let leftEdgeInsent: CGFloat = 8
-        let rightEdgeInsent: CGFloat = 8
-        let topSortingViewPadding: CGFloat = 8
-        
-        self.sortingView.frame = CGRect(x: 0, y: 0, width: 0, height: sortingViewHeight)
         self.sortingView.delegate = self
+        self.sortingView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: sortingViewHeight)
         
-        self.sortingView.frame = CGRect(x: 0, y: -sortingViewHeight + self.collectionView.contentInset.top - topSortingViewPadding, width: self.view.frame.width, height: sortingViewHeight)
-        self.collectionView.addSubview(self.sortingView)
-
         // collectionView
-        self.collectionView.isSkeletonable = true
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: MovieCollectionViewCell.self))
-        self.collectionView.showAnimatedGradientSkeleton()
-        self.collectionView.prepareSkeleton { (done) in
-        }
-        self.collectionView.contentInset = UIEdgeInsets(top: sortingViewHeight + topSortingViewPadding , left: leftEdgeInsent, bottom: self.collectionView.contentInset.bottom, right: rightEdgeInsent)
+        self.tableView.showsHorizontalScrollIndicator = false
+        self.tableView.bouncesZoom = false
+        self.tableView.isSkeletonable = true
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.tableHeaderView = self.sortingView
+        self.tableView.estimatedRowHeight = 216
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: String(describing: MovieTableViewCell.self))
+        self.tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
     
     private func needLoadNewMovies(indexPath: IndexPath) -> Bool {
@@ -98,36 +85,21 @@ class MoviesListViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UIcollection
-extension MoviesListViewController: SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.items.count
     }
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: MovieCollectionViewCell.self), for: indexPath) as! MovieCollectionViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieTableViewCell.self), for: indexPath) as! MovieTableViewCell
         
         if self.needLoadNewMovies(indexPath: indexPath) {
             self.viewModel.currentPage += 1
         }
         
         let data = self.items[indexPath.row]
-        cell.data = MovieCollectionViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title)
+        cell.data = MovieTableViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title, releaseDate: Date(), genres: ["asdad"], voteAverage: 5.5, description: "askdlamskdlajskld jkals jaslkd ajsldk jalksdj alksdj askd ")
         return cell
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return String(describing: MovieCollectionViewCell.self)
-    }
-    
-    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
-        return 1
-    }
-    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
     }
 }
 

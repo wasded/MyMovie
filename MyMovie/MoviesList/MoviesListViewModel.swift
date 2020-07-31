@@ -15,11 +15,9 @@ class MoviesListViewModel {
     @Injected var backendController: BackendDiscoverController
     
     @Published var discoveredMovies: [MovieDiscover] = []
-    @Published var wasFirstLoad: Bool = false
     @Published var sortType: MovieSortingType = .popularityDesc
     @Published var filter: Int = 0
     @Published var currentPage: Int = 1
-    @Published var x: Int = 0
     
     var cancellables: Set<AnyCancellable> = []
     
@@ -56,8 +54,6 @@ class MoviesListViewModel {
             .sink(receiveCompletion: { (completion) in
                 print()
             }) { (response) in
-                self.wasFirstLoad = true // Пока не могу придумать способа лучше и быстрее
-                
                 if response.page == self.currentPage { // не хорошая проверка, по хорошему надо все остальные запросы останавливать
                     if response.page == 1 {
                         self.discoveredMovies = response.results
