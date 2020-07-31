@@ -50,11 +50,12 @@ class MoviesListViewModel {
     
     // MARK: - Mehtods
     func loadMovies(page: Int, sortBy: MovieSortingType) {
-        self.backendController.getMovies(model: MovieDiscoverRequest(sortBy: sortBy, page: page))
+        self.backendController.getMovies(model: MovieDiscoverRequest(language: Locale.preferredLanguages.first, region: Locale.current.regionCode, sortBy: sortBy, page: page))
             .sink(receiveCompletion: { (completion) in
                 print()
             }) { (response) in
-                if response.page == self.currentPage { // не хорошая проверка, по хорошему надо все остальные запросы останавливать
+                // FIXME: не хорошая проверка, по хорошему надо все остальные запросы останавливать
+                if response.page == self.currentPage {
                     if response.page == 1 {
                         self.discoveredMovies = response.results
                     } else {

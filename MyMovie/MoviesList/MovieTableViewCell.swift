@@ -138,6 +138,11 @@ class MovieTableViewCell: UITableViewCell {
     
     private func updateInterface() {
         guard let data = self.data else { return }
+        
+        UIView.performWithoutAnimation {
+            self.posterView.image = nil
+        }
+        
         self.titleLabel.text = data.titleLabel
         
         self.additionalMovieInfoLabel.text = String(format: "%@ %@", self.dateFormatter.string(from: data.releaseDate), data.genres.joined(separator: "/"))
@@ -148,15 +153,12 @@ class MovieTableViewCell: UITableViewCell {
         self.voteAverageView.rating = data.voteAverage / 2
         
         self.posterView.showAnimatedGradientSkeleton()
-        UIView.animate(withDuration: 0) {
-            self.posterView.image = nil
-            self.posterView.sd_setImage(with: data.urlPoster, placeholderImage: nil) { [weak self] (_, error, _, _) in
-                guard let self = self else { return }
-                self.posterView.hideSkeleton()
-                if let _ = error {
-                    UIView.animate(withDuration: 0) {
-                        self.posterView.image = nil
-                    }
+        self.posterView.sd_setImage(with: data.urlPoster, placeholderImage: nil) { [weak self] (_, error, _, _) in
+            guard let self = self else { return }
+            self.posterView.hideSkeleton()
+            if let _ = error {
+                UIView.performWithoutAnimation {
+                    self.posterView.image = nil
                 }
             }
         }

@@ -19,6 +19,7 @@ class MoviesListViewController: UIViewController {
     private lazy var sortingView = SortingView()
     var items: [MovieDiscover] = [] {
         didSet {
+            // FIMXE: Сделать диффы
             if self.items != oldValue {
                 self.tableView.reloadData()
             }

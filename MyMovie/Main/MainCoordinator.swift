@@ -37,7 +37,7 @@ class MainCoordinator: TabBarCoordinator {
     
     func createMovieListPage() -> UINavigationController {
         let navigationController = UINavigationController()
-        navigationController.tabBarItem = UITabBarItem(title: NSLocalizedString("Profile", comment: ""), image: #imageLiteral(resourceName: "profileTabBar"), selectedImage: nil)
+        navigationController.tabBarItem = UITabBarItem(title: "Фильмы", image: #imageLiteral(resourceName: "movieTabBar"), selectedImage: nil)
         
         return navigationController
     }
