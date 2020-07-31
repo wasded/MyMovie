@@ -26,3 +26,9 @@ class MoviesListCoordinator: NavigationCoordinator {
         super.prepare()
     }
 }
+
+// MARK: - MoviesListViewControllerDelegate
+extension MoviesListCoordinator: MoviesListViewControllerDelegate {
+    func openFilterDidTap(_ sender: MoviesListViewController) {
+    }
+}

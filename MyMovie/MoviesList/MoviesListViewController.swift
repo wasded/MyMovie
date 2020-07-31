@@ -11,12 +11,17 @@ import Foundation
 import SkeletonView
 import SwiftUI
 
+protocol MoviesListViewControllerDelegate: class {
+    func openFilterDidTap(_ sender: MoviesListViewController)
+}
+
 class MoviesListViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
         
     // MARK: - Proprties
-    private lazy var sortingView = SortingView()
+    let sortingView = SortingView()
+    
     var items: [MovieDiscover] = [] {
         didSet {
             // FIMXE: Сделать диффы
@@ -25,8 +30,9 @@ class MoviesListViewController: UIViewController {
             }
         }
     }
-    
     var viewModel: MoviesListViewModel!
+    
+    weak var delegate: MoviesListViewControllerDelegate?
     
     static func instantiate(viewModel: MoviesListViewModel) -> MoviesListViewController {
         let viewController = UIStoryboard.moviesListStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesListViewController.self)) as! MoviesListViewController
