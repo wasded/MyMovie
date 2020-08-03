@@ -50,7 +50,7 @@ class MoviesListViewController: UIViewController {
     
     // MARK: - Actions
     @objc func filterButtonDidTap(_ sender: UIBarButtonItem) {
-        
+        self.delegate?.openFilterDidTap(self)
     }
     
     // MARK: - Methods

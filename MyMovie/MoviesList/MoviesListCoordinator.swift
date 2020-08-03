@@ -22,6 +22,7 @@ class MoviesListCoordinator: NavigationCoordinator {
     
     override func prepare() {
         let viewController = MoviesListViewController.instantiate(viewModel: MoviesListViewModel(backendController: Resolver.resolve()))
+        viewController.delegate = self
         self.root(viewController)
         super.prepare()
     }
@@ -30,5 +31,10 @@ class MoviesListCoordinator: NavigationCoordinator {
 // MARK: - MoviesListViewControllerDelegate
 extension MoviesListCoordinator: MoviesListViewControllerDelegate {
     func openFilterDidTap(_ sender: MoviesListViewController) {
+        let viewController = UINavigationController()
+        let coordinator = MoviesFilterCoordinator(rootViewController: viewController)
+        coordinator.prepare()
+        self.startChild(coordinator: coordinator)
+        self.present(viewController)
     }
 }

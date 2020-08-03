@@ -8,6 +8,12 @@
 
 import UIKit
 
+// MARK: - Delegate
+protocol MoviesFilterTypeListViewControllerDelegate: class {
+    func saveButtonDidTap(_ sender: MoviesFilterTypeListViewController)
+    func closeButtonDidTap(_ sender: MoviesFilterTypeListViewController)
+}
+
 // Можно было упростить и использовать статику, но мы легких путей не ищем)))
 class MoviesFilterTypeListViewController: UIViewController {
     // MARK: - IBOutlet
@@ -16,8 +22,10 @@ class MoviesFilterTypeListViewController: UIViewController {
     // MARK: - Properties
     var viewModel: MoviesFilterViewModel!
     
+    weak var delegate: MoviesFilterTypeListViewControllerDelegate?
+    
     static func instantiate(viewModel: MoviesFilterViewModel) -> MoviesFilterTypeListViewController {
-        let viewController = UIStoryboard.moviesListStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesFilterTypeListViewController.self)) as! MoviesFilterTypeListViewController
+        let viewController = UIStoryboard.moviesFilterStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesFilterTypeListViewController.self)) as! MoviesFilterTypeListViewController
         viewController.viewModel = viewModel
         
         return viewController
@@ -26,16 +34,29 @@ class MoviesFilterTypeListViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.configureInterface()
     }
     
     // MARK: - Methods
     private func configureInterface() {
+        // self
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.saveButtonDidTap(_:)))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(self.cacnelButtonDidTap(_:)))
+        
+        // tableView
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView()
     }
     
     // MARK: - Actions
+    @objc func saveButtonDidTap(_ sender: UIBarButtonItem) {
+        self.delegate?.saveButtonDidTap(self)
+    }
+    
+    @objc func cacnelButtonDidTap(_ sender: UIBarButtonItem) {
+        self.delegate?.closeButtonDidTap(self)
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -47,6 +68,4 @@ extension MoviesFilterTypeListViewController: UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
-    
-    
 }
