@@ -20,7 +20,7 @@ class MoviesFilterCoordinator: NavigationCoordinator {
     }
     
     override func prepare() {
-        let viewController = MoviesFilterTypeListViewController.instantiate(viewModel: MoviesFilterViewModel())
+        let viewController = MoviesFilterTypeListViewController.instantiate(viewModel: MoviesFilterTypeListViewModel())
         self.root(viewController)
         super.prepare()
     }
@@ -28,6 +28,24 @@ class MoviesFilterCoordinator: NavigationCoordinator {
 
 // MARK: - MoviesFilterTypeListViewControllerDelegate
 extension MoviesFilterCoordinator: MoviesFilterTypeListViewControllerDelegate {
+    func durationDidTap(_ sender: MoviesFilterTypeListViewController) {
+    }
+    
+    func saveDidTap(_ sender: MoviesFilterTypeListViewController) {
+    }
+    
+    func closeDidTap(_ sender: MoviesFilterTypeListViewController) {
+    }
+    
+    func releaseDateDidTap(_ sender: MoviesFilterTypeListViewController) {
+    }
+    
+    func genresDidTap(_ sender: MoviesFilterTypeListViewController) {
+    }
+    
+    func closeButtonDidTap(_ sender: MoviesFilterTypeListViewController) {
+    }
+    
     func saveButtonDidTap(_ sender: MoviesFilterTypeListViewController) {
     }
 }

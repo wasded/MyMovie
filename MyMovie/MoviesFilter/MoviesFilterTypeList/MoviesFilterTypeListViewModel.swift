@@ -1,5 +1,5 @@
 //
-//  MoviesFilterViewModel.swift
+//  MoviesFilterTypeListViewModel.swift
 //  MyMovie
 //
 //  Created by Andrey Baskirtcev on 31.07.2020.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-class MoviesFilterViewModel {
+class MoviesFilterTypeListViewModel {
     
 }
