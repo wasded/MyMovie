@@ -6,10 +6,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Movies Filter Type List View Controller-->
+        <!--Movies Filter List View Controller-->
         <scene sceneID="K7z-hi-nYZ">
             <objects>
-                <tableViewController storyboardIdentifier="MoviesFilterTypeListViewController" id="34w-DF-BJ4" customClass="MoviesFilterTypeListViewController" customModule="MyMovie" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MoviesFilterListViewController" id="34w-DF-BJ4" customClass="MoviesFilterListViewController" customModule="MyMovie" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="MoviesFilterTypeListViewController" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="p7Q-JA-M3Q" customClass="MoviesFilterTypeListViewControllerDelegate">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

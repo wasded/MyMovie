@@ -20,32 +20,33 @@ class MoviesFilterCoordinator: NavigationCoordinator {
     }
     
     override func prepare() {
-        let viewController = MoviesFilterTypeListViewController.instantiate(viewModel: MoviesFilterTypeListViewModel())
+        // FIXME: Нужно модель передовать
+        let viewController = MoviesFilterListViewController.instantiate(viewModel: MoviesFilterListViewModel(moviesFilterModel: MoviesFilterModel(voteAverageLte: .any, voteAverageGte: .any)))
         self.root(viewController)
         super.prepare()
     }
 }
 
 // MARK: - MoviesFilterTypeListViewControllerDelegate
-extension MoviesFilterCoordinator: MoviesFilterTypeListViewControllerDelegate {
-    func durationDidTap(_ sender: MoviesFilterTypeListViewController) {
+extension MoviesFilterCoordinator: MoviesFilterListViewControllerDelegate {
+    func durationDidTap(_ sender: MoviesFilterListViewController) {
     }
     
-    func saveDidTap(_ sender: MoviesFilterTypeListViewController) {
+    func saveDidTap(_ sender: MoviesFilterListViewController) {
     }
     
-    func closeDidTap(_ sender: MoviesFilterTypeListViewController) {
+    func closeDidTap(_ sender: MoviesFilterListViewController) {
     }
     
-    func releaseDateDidTap(_ sender: MoviesFilterTypeListViewController) {
+    func releaseDateDidTap(_ sender: MoviesFilterListViewController) {
     }
     
-    func genresDidTap(_ sender: MoviesFilterTypeListViewController) {
+    func genresDidTap(_ sender: MoviesFilterListViewController) {
     }
     
-    func closeButtonDidTap(_ sender: MoviesFilterTypeListViewController) {
+    func closeButtonDidTap(_ sender: MoviesFilterListViewController) {
     }
     
-    func saveButtonDidTap(_ sender: MoviesFilterTypeListViewController) {
+    func saveButtonDidTap(_ sender: MoviesFilterListViewController) {
     }
 }
