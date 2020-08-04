@@ -61,7 +61,6 @@ class MoviesFilterListViewModel {
     }
     
     // MARK: - Methods
-    
     func isAdultDidChanged(_ isAdult: Bool) {
         self.moviesFilterModel.isAdult = isAdult
     }

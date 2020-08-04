@@ -13,9 +13,7 @@ import Combine
 protocol MoviesFilterListViewControllerDelegate: class {
     func saveDidTap(_ sender: MoviesFilterListViewController)
     func closeDidTap(_ sender: MoviesFilterListViewController)
-    func releaseDateDidTap(_ sender: MoviesFilterListViewController)
     func genresDidTap(_ sender: MoviesFilterListViewController)
-    func durationDidTap(_ sender: MoviesFilterListViewController)
 }
 
 class MoviesFilterListViewController: UITableViewController {
@@ -208,7 +206,7 @@ class MoviesFilterListViewController: UITableViewController {
     }
     
     func genresTableViewCellDidTap(_ sender: UITableViewCell) {
-        
+        self.delegate?.genresDidTap(self)
     }
     
     func durationTableViewCellDidTap(_ sender: UITableViewCell) {
