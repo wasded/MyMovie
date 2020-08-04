@@ -56,6 +56,7 @@
 		721D354324D9610200DF7856 /* MoviesFilterGenresListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721D354224D9610200DF7856 /* MoviesFilterGenresListViewController.swift */; };
 		721D354524D961B700DF7856 /* MoviesFilterGenresListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721D354424D961B700DF7856 /* MoviesFilterGenresListViewModel.swift */; };
 		721D354724D961CA00DF7856 /* MoviesFIlterGenresListViewModel+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721D354624D961CA00DF7856 /* MoviesFIlterGenresListViewModel+Data.swift */; };
+		721D354924D9784600DF7856 /* MovieGenreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721D354824D9784600DF7856 /* MovieGenreTableViewCell.swift */; };
 		72B318A424D4018000CEC236 /* MovieGenre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B318A324D4018000CEC236 /* MovieGenre.swift */; };
 		72B318A724D42E7000CEC236 /* MoviesFilterListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B318A624D42E7000CEC236 /* MoviesFilterListViewController.swift */; };
 		72B318AA24D430C500CEC236 /* MoviesFilterListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72B318A924D430C500CEC236 /* MoviesFilterListViewModel.swift */; };
@@ -138,6 +139,7 @@
 		721D354224D9610200DF7856 /* MoviesFilterGenresListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterGenresListViewController.swift; sourceTree = "<group>"; };
 		721D354424D961B700DF7856 /* MoviesFilterGenresListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterGenresListViewModel.swift; sourceTree = "<group>"; };
 		721D354624D961CA00DF7856 /* MoviesFIlterGenresListViewModel+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MoviesFIlterGenresListViewModel+Data.swift"; sourceTree = "<group>"; };
+		721D354824D9784600DF7856 /* MovieGenreTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieGenreTableViewCell.swift; sourceTree = "<group>"; };
 		72B318A324D4018000CEC236 /* MovieGenre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieGenre.swift; sourceTree = "<group>"; };
 		72B318A624D42E7000CEC236 /* MoviesFilterListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterListViewController.swift; sourceTree = "<group>"; };
 		72B318A924D430C500CEC236 /* MoviesFilterListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterListViewModel.swift; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 				721D354224D9610200DF7856 /* MoviesFilterGenresListViewController.swift */,
 				721D354424D961B700DF7856 /* MoviesFilterGenresListViewModel.swift */,
 				721D354624D961CA00DF7856 /* MoviesFIlterGenresListViewModel+Data.swift */,
+				721D354824D9784600DF7856 /* MovieGenreTableViewCell.swift */,
 			);
 			path = MoviesFilterGenresList;
 			sourceTree = "<group>";
@@ -727,6 +730,7 @@
 				49E575D824D04C3E00E200EA /* TabBarCoordinator.swift in Sources */,
 				721D354524D961B700DF7856 /* MoviesFilterGenresListViewModel.swift in Sources */,
 				49E5760024D194D400E200EA /* BackendDiscoverController.swift in Sources */,
+				721D354924D9784600DF7856 /* MovieGenreTableViewCell.swift in Sources */,
 				72B318A424D4018000CEC236 /* MovieGenre.swift in Sources */,
 				49E575D924D04C3E00E200EA /* LinkHandler.swift in Sources */,
 				72B318AA24D430C500CEC236 /* MoviesFilterListViewModel.swift in Sources */,

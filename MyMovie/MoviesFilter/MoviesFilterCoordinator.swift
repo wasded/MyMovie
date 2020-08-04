@@ -38,7 +38,8 @@ extension MoviesFilterCoordinator: MoviesFilterListViewControllerDelegate {
     }
     
     func genresDidTap(_ sender: MoviesFilterListViewController) {
-        let viewController = MoviesFilterGenresListViewController.instantiate(viewModel: MoviesFilterGenresListViewModel())
+        // FIXME: Передавать модель
+        let viewController = MoviesFilterGenresListViewController.instantiate(viewModel: MoviesFilterGenresListViewModel(selectedGenres: Set()))
         self.show(viewController)
     }
     
