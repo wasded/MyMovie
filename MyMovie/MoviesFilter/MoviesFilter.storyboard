@@ -82,18 +82,17 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Любое" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G8X-4x-Xew">
-                                                    <rect key="frame" x="250" y="13" width="54" height="21"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Любое" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="l88-5a-cga">
+                                                    <rect key="frame" x="250" y="12.5" width="54" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="EpB-ur-2vs" firstAttribute="leading" secondItem="6ng-NQ-vch" secondAttribute="leading" constant="20" id="8zE-M5-rxF"/>
-                                                <constraint firstItem="G8X-4x-Xew" firstAttribute="centerY" secondItem="6ng-NQ-vch" secondAttribute="centerY" id="YTZ-IW-HYZ"/>
+                                                <constraint firstItem="l88-5a-cga" firstAttribute="centerY" secondItem="6ng-NQ-vch" secondAttribute="centerY" id="IgL-fD-RfS"/>
+                                                <constraint firstAttribute="trailing" secondItem="l88-5a-cga" secondAttribute="trailing" constant="16" id="K0m-F8-ogf"/>
                                                 <constraint firstItem="EpB-ur-2vs" firstAttribute="centerY" secondItem="6ng-NQ-vch" secondAttribute="centerY" id="g4M-pd-WMe"/>
-                                                <constraint firstAttribute="trailing" secondItem="G8X-4x-Xew" secondAttribute="trailing" constant="16" id="n9l-PO-0H0"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -197,7 +196,7 @@
                         <outlet property="genresLabel" destination="GbT-kV-z9k" id="czV-Ce-Gd8"/>
                         <outlet property="releaseDateLabel" destination="n8a-oP-xLi" id="vJO-jq-Ebp"/>
                         <outlet property="voteAverageTextField" destination="l25-wF-c2E" id="20K-pq-ybZ"/>
-                        <outlet property="voteCountLabel" destination="G8X-4x-Xew" id="0qo-xJ-iyG"/>
+                        <outlet property="voteCountTextField" destination="l88-5a-cga" id="MkI-2e-HQb"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CCx-F9-eTy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

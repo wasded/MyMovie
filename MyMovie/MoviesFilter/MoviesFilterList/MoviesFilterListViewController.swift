@@ -31,13 +31,15 @@ class MoviesFilterListViewController: UITableViewController {
     // MARK: - Outlets
     @IBOutlet weak var adultSwitch: UISwitch!
     @IBOutlet weak var voteAverageTextField: UITextField!
-    @IBOutlet weak var voteCountLabel: UILabel!
+    @IBOutlet weak var voteCountTextField: UITextField!
     @IBOutlet weak var releaseDateLabel: UILabel!
     @IBOutlet weak var genresLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
     
     // MARK: - Properties
+    // Можно было использовать один пикер, но проще сделать несколько, так как с одним можно багов наловить
     let voteAveragePickerView = UIPickerView()
+    let voteCountPickerView = UIPickerView()
     let keyboardToolBar = MoviesFilterListKeyboardToolBar()
     
     var viewModel: MoviesFilterListViewModel!
@@ -90,6 +92,7 @@ class MoviesFilterListViewController: UITableViewController {
     // FIXME: Придумать способ получше
     private func disableAllTextFields() {
         self.voteAverageTextField.isEnabled = false
+        self.voteCountTextField.isEnabled = false
     }
     
     private func bindingToProperties() {
@@ -105,12 +108,19 @@ class MoviesFilterListViewController: UITableViewController {
                 self.voteAveragePickerView.reloadAllComponents()
             })
         .store(in: &self.viewModel.cancellables)
+        
+        self.viewModel.$voteCountText
+            .sink { (value) in
+                self.voteCountTextField.text = value
+        }
+        .store(in: &self.viewModel.cancellables)
     }
     
     private func configureInterface() {
         // self
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(self.saveButtonDidTap(_:)))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(self.cancelButtonDidTap(_:)))
+        self.title = "Фильтры"
         
         // tableView
         self.tableView.delegate = self
@@ -123,6 +133,7 @@ class MoviesFilterListViewController: UITableViewController {
         self.keyboardToolBar.closeButton.action = #selector(self.closeKeyboardButtonDidTap(_:))
         
         // adultTableViewCell
+        self.adultSwitch.isOn = self.viewModel.moviesFilterModel.isAdult
         self.adultSwitch.addTarget(self, action: #selector(self.adultSwitchDidChangedValue(_:)), for: .valueChanged)
         
         // voteAverageTableViewCell
@@ -130,14 +141,21 @@ class MoviesFilterListViewController: UITableViewController {
         self.voteAveragePickerView.dataSource = self
         self.voteAverageTextField.inputView = self.voteAveragePickerView
         self.voteAverageTextField.inputAccessoryView = self.keyboardToolBar
-        self.voteAverageTextField.isEnabled = false
+        self.voteAverageTextField.text = self.viewModel.voteAverageText
         
         // voteCountTableViewCell
+        self.voteCountPickerView.delegate = self
+        self.voteCountPickerView.dataSource = self
+        self.voteCountTextField.inputView = self.voteCountPickerView
+        self.voteCountTextField.inputAccessoryView = self.keyboardToolBar
+        self.voteCountTextField.text = self.viewModel.voteCountText
         
         // releaseDateTableViewCell
         
         // genresTableViewCell
         
+        
+        self.disableAllTextFields()
     }
     
     // MARK: - Actions
@@ -159,7 +177,8 @@ class MoviesFilterListViewController: UITableViewController {
     }
     
     func voteCountTableViewCellDidTap(_ sender: UITableViewCell) {
-        
+        self.voteCountTextField.isEnabled = true
+        self.voteCountTextField.becomeFirstResponder()
     }
     
     func releasDateTableViewCellDidTap(_ sender: UITableViewCell) {
@@ -180,13 +199,15 @@ class MoviesFilterListViewController: UITableViewController {
     
     // MARK: - UITableViewDelegate, UITableViewDataSource
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.disableAllTextFields()
+        
         if let cellType = CellType(rawValue: indexPath.row), let cell = self.tableView.cellForRow(at: indexPath) {
             switch cellType {
             case .adult: break
             case .voteAverage:
                 self.voteAverageTableViewCellDidTap(cell)
             case .voteCount:
-                self.voteAverageTableViewCellDidTap(cell)
+                self.voteCountTableViewCellDidTap(cell)
             case .releaseDate:
                 self.releasDateTableViewCellDidTap(cell)
             case .genres:
@@ -205,6 +226,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         if pickerView === self.voteAveragePickerView {
             return 2
+        } else if pickerView === self.voteCountPickerView {
+            return 1
         } else {
             return 0
         }
@@ -217,6 +240,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             } else {
                 return self.filtredVoteAveragePickerViewData.maximum.count
             }
+        } else if pickerView === self.voteCountPickerView {
+            return self.viewModel.voteCountPickerViewData.count
         } else {
             return 0
         }
@@ -229,6 +254,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             } else {
                 return self.filtredVoteAveragePickerViewData.maximum[row].title
             }
+        } else if pickerView == self.voteCountPickerView {
+            return self.viewModel.voteCountPickerViewData[row].title
         } else {
             return nil
         }
@@ -237,10 +264,12 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView === self.voteAveragePickerView {
             if component == 0 {
-                self.viewModel.filterModelDidChanged(minimum: self.filtredVoteAveragePickerViewData.minimum[row].value, maximum: nil)
+                self.viewModel.voteAverageDidChanged(minimum: self.filtredVoteAveragePickerViewData.minimum[row].value, maximum: nil)
             } else {
-                self.viewModel.filterModelDidChanged(minimum: nil, maximum: self.filtredVoteAveragePickerViewData.maximum[row].value)
+                self.viewModel.voteAverageDidChanged(minimum: nil, maximum: self.filtredVoteAveragePickerViewData.maximum[row].value)
             }
+        } else if pickerView == self.voteCountPickerView {
+            self.viewModel.voteCountDidChanged(voteCount: self.viewModel.voteCountPickerViewData[row].value)
         }
     }
 }
