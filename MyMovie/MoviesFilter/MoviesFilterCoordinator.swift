@@ -21,7 +21,7 @@ class MoviesFilterCoordinator: NavigationCoordinator {
     
     override func prepare() {
         // FIXME: Нужно модель передовать
-        let viewController = MoviesFilterListViewController.instantiate(viewModel: MoviesFilterListViewModel(moviesFilterModel: MoviesFilterModel(isAdult: false, voteAverageLte: .any, voteAverageGte: .any, voteCount: .any)))
+        let viewController = MoviesFilterListViewController.instantiate(viewModel: MoviesFilterListViewModel(moviesFilterModel: MoviesFilterModel(isAdult: false, voteAverageLte: -1, voteAverageGte: -1, voteCount: .any, releaseDateLte: .any, releaseDateGte: .any)))
         self.root(viewController)
         super.prepare()
     }

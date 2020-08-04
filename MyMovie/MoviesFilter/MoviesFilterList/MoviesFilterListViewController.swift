@@ -32,7 +32,7 @@ class MoviesFilterListViewController: UITableViewController {
     @IBOutlet weak var adultSwitch: UISwitch!
     @IBOutlet weak var voteAverageTextField: UITextField!
     @IBOutlet weak var voteCountTextField: UITextField!
-    @IBOutlet weak var releaseDateLabel: UILabel!
+    @IBOutlet weak var releaseDateTextField: UITextField!
     @IBOutlet weak var genresLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
     
@@ -40,13 +40,15 @@ class MoviesFilterListViewController: UITableViewController {
     // Можно было использовать один пикер, но проще сделать несколько, так как с одним можно багов наловить
     let voteAveragePickerView = UIPickerView()
     let voteCountPickerView = UIPickerView()
+    let releaseDatePickerView = UIPickerView()
     let keyboardToolBar = MoviesFilterListKeyboardToolBar()
     
     var viewModel: MoviesFilterListViewModel!
     
     weak var delegate: MoviesFilterListViewControllerDelegate?
     
-    private(set) var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
+    private(set) var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
+    private(set) var filtredReleaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
     private var selectedCell: CellType?
     
     static func instantiate(viewModel: MoviesFilterListViewModel) -> MoviesFilterListViewController {
@@ -75,16 +77,16 @@ class MoviesFilterListViewController: UITableViewController {
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-//            let bottomInsent = keyboardFrame.size.height
-//            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInsent, right: 0)
-//            self.tableView.scrollIndicatorInsets = self.tableView.contentInset
+            //            let bottomInsent = keyboardFrame.size.height
+            //            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottomInsent, right: 0)
+            //            self.tableView.scrollIndicatorInsets = self.tableView.contentInset
         }
     }
-
+    
     @objc func keyboardWillHide(notification: NSNotification) {
         if let _ = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-//            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//            self.tableView.scrollIndicatorInsets = self.tableView.contentInset
+            //            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            //            self.tableView.scrollIndicatorInsets = self.tableView.contentInset
         }
         self.disableAllTextFields()
     }
@@ -93,6 +95,7 @@ class MoviesFilterListViewController: UITableViewController {
     private func disableAllTextFields() {
         self.voteAverageTextField.isEnabled = false
         self.voteCountTextField.isEnabled = false
+        self.releaseDateTextField.isEnabled = false
     }
     
     private func bindingToProperties() {
@@ -107,11 +110,24 @@ class MoviesFilterListViewController: UITableViewController {
                 self.filtredVoteAveragePickerViewData = value
                 self.voteAveragePickerView.reloadAllComponents()
             })
-        .store(in: &self.viewModel.cancellables)
+            .store(in: &self.viewModel.cancellables)
         
         self.viewModel.$voteCountText
             .sink { (value) in
                 self.voteCountTextField.text = value
+        }
+        .store(in: &self.viewModel.cancellables)
+        
+        self.viewModel.$filtredReleaseDatePickerViewData
+            .sink { (value) in
+                self.filtredReleaseDatePickerViewData = value
+                self.releaseDatePickerView.reloadAllComponents()
+        }
+        .store(in: &self.viewModel.cancellables)
+        
+        self.viewModel.$releaseDateText
+            .sink { (value) in
+                self.releaseDateTextField.text = value
         }
         .store(in: &self.viewModel.cancellables)
     }
@@ -151,6 +167,11 @@ class MoviesFilterListViewController: UITableViewController {
         self.voteCountTextField.text = self.viewModel.voteCountText
         
         // releaseDateTableViewCell
+        self.releaseDatePickerView.delegate = self
+        self.releaseDatePickerView.dataSource = self
+        self.releaseDateTextField.inputView = self.releaseDatePickerView
+        self.releaseDateTextField.inputAccessoryView = self.keyboardToolBar
+        self.releaseDateTextField.text = self.viewModel.releaseDateText
         
         // genresTableViewCell
         
@@ -182,7 +203,8 @@ class MoviesFilterListViewController: UITableViewController {
     }
     
     func releasDateTableViewCellDidTap(_ sender: UITableViewCell) {
-        
+        self.releaseDateTextField.isEnabled = true
+        self.releaseDateTextField.becomeFirstResponder()
     }
     
     func genresTableViewCellDidTap(_ sender: UITableViewCell) {
@@ -228,6 +250,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             return 2
         } else if pickerView === self.voteCountPickerView {
             return 1
+        } else if pickerView === self.releaseDatePickerView {
+            return 2
         } else {
             return 0
         }
@@ -242,6 +266,12 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             }
         } else if pickerView === self.voteCountPickerView {
             return self.viewModel.voteCountPickerViewData.count
+        } else if pickerView === self.releaseDatePickerView {
+            if component == 0 {
+                return self.filtredReleaseDatePickerViewData.minimum.count
+            } else {
+                return self.filtredReleaseDatePickerViewData.maximum.count
+            }
         } else {
             return 0
         }
@@ -256,6 +286,12 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             }
         } else if pickerView == self.voteCountPickerView {
             return self.viewModel.voteCountPickerViewData[row].title
+        } else if pickerView === self.releaseDatePickerView {
+            if component == 0 {
+                return self.filtredReleaseDatePickerViewData.minimum[row].title
+            } else {
+                return self.filtredReleaseDatePickerViewData.maximum[row].title
+            }
         } else {
             return nil
         }
@@ -270,6 +306,12 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             }
         } else if pickerView == self.voteCountPickerView {
             self.viewModel.voteCountDidChanged(voteCount: self.viewModel.voteCountPickerViewData[row].value)
+        } else if pickerView === self.releaseDatePickerView {
+            if component == 0 {
+                self.viewModel.releaseDateDidChanged(minimum: self.filtredReleaseDatePickerViewData.minimum[row].value, maximum: nil)
+            } else {
+                self.viewModel.releaseDateDidChanged(minimum: nil, maximum: self.filtredReleaseDatePickerViewData.maximum[row].value)
+            }
         }
     }
 }

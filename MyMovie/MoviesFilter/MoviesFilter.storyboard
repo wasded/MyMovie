@@ -109,18 +109,17 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Любая" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n8a-oP-xLi">
-                                                    <rect key="frame" x="251" y="13" width="53" height="21"/>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Любое" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="l01-EA-Cly">
+                                                    <rect key="frame" x="250" y="13" width="54" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ech-fk-h6w" firstAttribute="centerY" secondItem="ju3-5C-B6l" secondAttribute="centerY" id="5G8-ob-9PY"/>
+                                                <constraint firstAttribute="trailing" secondItem="l01-EA-Cly" secondAttribute="trailing" constant="16" id="RA3-Jx-ayP"/>
                                                 <constraint firstItem="ech-fk-h6w" firstAttribute="leading" secondItem="ju3-5C-B6l" secondAttribute="leading" constant="20" id="eQt-jz-JbP"/>
-                                                <constraint firstAttribute="trailing" secondItem="n8a-oP-xLi" secondAttribute="trailing" constant="16" id="j0c-hi-Lcf"/>
-                                                <constraint firstItem="n8a-oP-xLi" firstAttribute="centerY" secondItem="ju3-5C-B6l" secondAttribute="centerY" id="mT5-dU-pUV"/>
+                                                <constraint firstItem="l01-EA-Cly" firstAttribute="centerY" secondItem="ju3-5C-B6l" secondAttribute="centerY" id="wdh-8h-Blb"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -194,7 +193,7 @@
                         <outlet property="adultSwitch" destination="QPr-sy-Ztk" id="35h-tw-LZT"/>
                         <outlet property="durationLabel" destination="KUe-Sn-N30" id="Hyh-Go-p6B"/>
                         <outlet property="genresLabel" destination="GbT-kV-z9k" id="czV-Ce-Gd8"/>
-                        <outlet property="releaseDateLabel" destination="n8a-oP-xLi" id="vJO-jq-Ebp"/>
+                        <outlet property="releaseDateTextField" destination="l01-EA-Cly" id="Iae-Wh-hnh"/>
                         <outlet property="voteAverageTextField" destination="l25-wF-c2E" id="20K-pq-ybZ"/>
                         <outlet property="voteCountTextField" destination="l88-5a-cga" id="MkI-2e-HQb"/>
                     </connections>
