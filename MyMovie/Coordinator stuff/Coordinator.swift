@@ -44,7 +44,7 @@ Expose to Coordinator only those behaviors that cause push/pop/present to bubble
 
 
 ///	Main Coordinator instance, where T is UIViewController or any of its subclasses.
-open class Coordinator<T: UIViewController>: UIResponder, Coordinating {
+open class Coordinator<T: UIViewController>: UIResponder, Coordinating, UIAdaptivePresentationControllerDelegate {
 	public let rootViewController: T
     private var isPrepared:Bool = false
 
@@ -59,7 +59,10 @@ open class Coordinator<T: UIViewController>: UIResponder, Coordinating {
 			fatalError("Must supply UIViewController (or any of its subclasses) or override this init and instantiate VC in there.")
 		}
 		self.rootViewController = rvc
+        
 		super.init()
+        
+        self.rootViewController.presentationController?.delegate = self
 	}
 
 
@@ -182,5 +185,8 @@ open class Coordinator<T: UIViewController>: UIResponder, Coordinating {
     public func removeChildCoordinator(id: String) {
         self.childCoordinators.removeValue(forKey: id)
     }
+    
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        self.parent?.coordinatorDidFinish(self, completion: {})
+    }
 }
-

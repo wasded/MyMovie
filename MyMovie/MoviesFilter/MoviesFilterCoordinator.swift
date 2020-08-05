@@ -9,10 +9,21 @@
 import Foundation
 import Resolver
 
+protocol MoviesFilterCoordinatorDelegate: class {
+    func saveButtonDidTap(_ sender: MoviesFilterCoordinator, filterModel: MoviesFilterModel)
+}
+
 class MoviesFilterCoordinator: NavigationCoordinator {
     // MARK: - Properties
+    var filterModel: MoviesFilterModel
     
+    weak var delegate: MoviesFilterCoordinatorDelegate?
+
     // MARK: - Init
+    init(rootViewController: UINavigationController, filterModel: MoviesFilterModel) {
+        self.filterModel = filterModel
+        super.init(rootViewController: rootViewController)
+    }
     
     // MARK: - Methods
     override func start(with completion: @escaping () -> Void) {
@@ -21,7 +32,7 @@ class MoviesFilterCoordinator: NavigationCoordinator {
     
     override func prepare() {
         // FIXME: Нужно модель передовать
-        let viewController = MoviesFilterListViewController.instantiate(viewModel: MoviesFilterListViewModel(moviesFilterModel: MoviesFilterModel(isAdult: false, voteAverageLte: -1, voteAverageGte: -1, voteCount: .any, releaseDateLte: .any, releaseDateGte: .any, duration: .any)))
+        let viewController = MoviesFilterListViewController.instantiate(viewModel: MoviesFilterListViewModel(moviesFilterModel: self.filterModel))
         viewController.delegate = self
         self.root(viewController)
         super.prepare()
@@ -30,8 +41,8 @@ class MoviesFilterCoordinator: NavigationCoordinator {
 
 // MARK: - MoviesFilterTypeListViewControllerDelegate
 extension MoviesFilterCoordinator: MoviesFilterListViewControllerDelegate {
-    func saveDidTap(_ sender: MoviesFilterListViewController) {
-        
+    func saveDidTap(_ sender: MoviesFilterListViewController, filterModel: MoviesFilterModel) {
+        self.delegate?.saveButtonDidTap(self, filterModel: filterModel)
     }
     
     func closeDidTap(_ sender: MoviesFilterListViewController) {

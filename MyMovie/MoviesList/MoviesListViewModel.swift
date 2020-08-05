@@ -18,6 +18,7 @@ class MoviesListViewModel {
     @Published var sortType: MovieSortingType = .popularityDesc
     @Published var filter: Int = 0
     @Published var currentPage: Int = 1
+    @Published var filterModel = MoviesFilterModel()
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -28,28 +29,31 @@ class MoviesListViewModel {
     
     func start() {
         self.bindingToProperties()
-        self.loadMovies(page: self.currentPage, sortBy: self.sortType)
+        self.loadMovies(page: self.currentPage, sortBy: self.sortType, filterModel: self.filterModel)
     }
     
     private func bindingToProperties() {
-        Publishers.CombineLatest3(self.$currentPage, self.$filter, self.$sortType)
-            .sink(receiveValue: { (value) in
+        Publishers.CombineLatest4(self.$currentPage, self.$filter, self.$sortType, self.$filterModel)
+            .sink(receiveValue: { [weak self] (value) in
+                guard let self = self else { return }
+                
                 var page = value.0
                 let filter = value.1
                 let sortType = value.2
+                let filterModel = value.3
                 
                 if self.filter != filter || self.sortType != sortType {
                     self.currentPage = 1
                     page = 1
                 }
                 
-                self.loadMovies(page: page, sortBy: sortType)
+                self.loadMovies(page: page, sortBy: sortType, filterModel: filterModel)
             })
         .store(in: &self.cancellables)
     }
     
     // MARK: - Mehtods
-    func loadMovies(page: Int, sortBy: MovieSortingType) {
+    func loadMovies(page: Int, sortBy: MovieSortingType, filterModel: MoviesFilterModel) {
         self.backendController.getMovies(model: MovieDiscoverRequest(language: Locale.preferredLanguages.first, region: Locale.current.regionCode, sortBy: sortBy, page: page))
             .sink(receiveCompletion: { (completion) in
                 print()

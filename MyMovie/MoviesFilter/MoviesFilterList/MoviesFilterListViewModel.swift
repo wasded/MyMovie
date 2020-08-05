@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 struct MoviesFilterListPickerData<T> {
     var title: String
@@ -17,7 +18,7 @@ struct MoviesFilterListPickerData<T> {
 // FIXME: Какой-то большой тип данных получается из-за картэжей, стоит поменять на структуру
 class MoviesFilterListViewModel {
     // MARK: - Properties
-    @Published var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
+    @Published var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
     @Published var filtredReleaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
     
     @Published var voteAverageText: String = ""
@@ -25,15 +26,14 @@ class MoviesFilterListViewModel {
     @Published var releaseDateText: String = ""
     @Published var durationText: String = ""
     
-    var moviesFilterModel: MoviesFilterModel
-    var voteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
+    var filterModel: MoviesFilterModel
+    var voteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
     var voteCountPickerViewData = [MoviesFilterListPickerData<MoviesFilterVoteCount>]()
     var releaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
     var durationDatePickerViewData = [MoviesFilterListPickerData<MoviesFilterDuration>]()
     
     private var cancellables: Set<AnyCancellable> = []
     
-    private let voteAverageAnyValue = -1
     private let voteAverageMinimumValue = 0
     private let voteAverageMaximumValue = 10
     private let firstMovieReleaseDate = Date(timeIntervalSince1970: -2366755200)
@@ -50,74 +50,90 @@ class MoviesFilterListViewModel {
     
     // MARK: - Init
     init(moviesFilterModel: MoviesFilterModel) {
-        self.moviesFilterModel = moviesFilterModel
+        self.filterModel = moviesFilterModel
         
         self.voteAveragePickerViewData = self.getVoteAverageItems()
-        self.voteAverageDidChanged(minimum: self.moviesFilterModel.voteAverageLte, maximum: self.moviesFilterModel.voteAverageGte)
+        self.voteAverageDidChanged(minimum: self.filterModel.voteAverageLte, maximum: self.filterModel.voteAverageGte)
         
         self.voteCountPickerViewData = self.getVoteCountItems()
-        self.voteCountDidChanged(voteCount: self.moviesFilterModel.voteCount)
+        self.voteCountDidChanged(voteCount: self.filterModel.voteCount)
         
         self.releaseDatePickerViewData = self.getReleaseDateItems()
-        self.releaseDateDidChanged(minimum: self.moviesFilterModel.releaseDateLte, maximum: self.moviesFilterModel.releaseDateGte)
+        self.releaseDateDidChanged(minimum: self.filterModel.releaseDateLte, maximum: self.filterModel.releaseDateGte)
         
         self.durationDatePickerViewData = self.getDurationItems()
-        self.durationDidChanged(self.moviesFilterModel.duration)
+        self.durationDidChanged(self.filterModel.duration)
     }
     
     // MARK: - Methods
     func isAdultDidChanged(_ isAdult: Bool) {
-        self.moviesFilterModel.isAdult = isAdult
+        self.filterModel.isAdult = isAdult
     }
     
-    func voteAverageDidChanged(minimum: Int?, maximum: Int?) {
+    func voteAverageDidChanged(minimum: MoviesFilterVoteAverage?, maximum: MoviesFilterVoteAverage?) {
         if let minimum = minimum {
-            self.moviesFilterModel.voteAverageLte = minimum
+            self.filterModel.voteAverageLte = minimum
         }
         
         if let maximum = maximum {
-            self.moviesFilterModel.voteAverageGte = maximum
+            self.filterModel.voteAverageGte = maximum
         }
         
         self.voteAverageText = self.getVoteAverageText()
         
         // filter
-        var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
+        var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
         
-        if self.moviesFilterModel.voteAverageLte != self.voteAverageAnyValue {
-            filtredVoteAveragePickerViewData.maximum = self.voteAveragePickerViewData.maximum.filter({ $0.value == self.voteAverageAnyValue || $0.value >= self.moviesFilterModel.voteAverageLte })
-        } else {
-            filtredVoteAveragePickerViewData.maximum = self.voteAveragePickerViewData.maximum
+        switch self.filterModel.voteAverageLte {
+            case .any:
+                filtredVoteAveragePickerViewData.maximum = self.voteAveragePickerViewData.maximum
+        case .value(let minimumValue):
+            filtredVoteAveragePickerViewData.maximum = self.voteAveragePickerViewData.maximum.filter({ (item) -> Bool in
+                switch item.value {
+                case .any:
+                    return true
+                case .value(let maximumValue):
+                    return maximumValue >= minimumValue
+                }
+            })
         }
         
-        if self.moviesFilterModel.voteAverageGte != self.voteAverageAnyValue {
-            filtredVoteAveragePickerViewData.minimum = self.voteAveragePickerViewData.minimum.filter({ $0.value == self.voteAverageAnyValue || $0.value <= self.moviesFilterModel.voteAverageGte })
-        } else {
-            filtredVoteAveragePickerViewData.minimum = self.voteAveragePickerViewData.minimum
+        switch self.filterModel.voteAverageGte {
+            case .any:
+                filtredVoteAveragePickerViewData.minimum = self.voteAveragePickerViewData.minimum
+        case .value(let maximumValue):
+            filtredVoteAveragePickerViewData.maximum = self.voteAveragePickerViewData.maximum.filter({ (item) -> Bool in
+                switch item.value {
+                case .any:
+                    return true
+                case .value(let minimumValue):
+                    return maximumValue >= minimumValue
+                }
+            })
         }
         
         self.filtredVoteAveragePickerViewData = filtredVoteAveragePickerViewData
     }
     
     func voteCountDidChanged(voteCount: MoviesFilterVoteCount) {
-        self.moviesFilterModel.voteCount = voteCount
+        self.filterModel.voteCount = voteCount
         
         self.voteCountText = voteCount.title
     }
     
     func releaseDateDidChanged(minimum: MoviesFilterReleaseDate?, maximum: MoviesFilterReleaseDate?) {
         if let minimum = minimum {
-            self.moviesFilterModel.releaseDateLte = minimum
+            self.filterModel.releaseDateLte = minimum
         }
         
         if let maximum = maximum {
-            self.moviesFilterModel.releaseDateGte = maximum
+            self.filterModel.releaseDateGte = maximum
         }
         
         // filter
         var filtredReleaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
         
-        switch self.moviesFilterModel.releaseDateLte {
+        switch self.filterModel.releaseDateLte {
         case .any:
             filtredReleaseDatePickerViewData.maximum = self.releaseDatePickerViewData.maximum
         case .value(let minimumValue):
@@ -131,7 +147,7 @@ class MoviesFilterListViewModel {
             })
         }
         
-        switch self.moviesFilterModel.releaseDateGte {
+        switch self.filterModel.releaseDateGte {
         case .any:
             filtredReleaseDatePickerViewData.minimum = self.releaseDatePickerViewData.minimum
         case .value(let maximumValue):
@@ -151,21 +167,21 @@ class MoviesFilterListViewModel {
     }
     
     func durationDidChanged(_ duration: MoviesFilterDuration) {
-        self.moviesFilterModel.duration = duration
+        self.filterModel.duration = duration
         
         self.durationText = duration.title
     }
     
     // MARK: - PickerView items
-    private func getVoteAverageItems() -> (minimum: [MoviesFilterListPickerData<Int>], maximum: [MoviesFilterListPickerData<Int>]) {
-        var data = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
+    private func getVoteAverageItems() -> (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>], maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]) {
+        var data = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
         
-        data.minimum.append(MoviesFilterListPickerData(title: "Любая", value: self.voteAverageAnyValue))
-        data.maximum.append(MoviesFilterListPickerData(title: "Любая", value: self.voteAverageAnyValue))
+        data.minimum.append(MoviesFilterListPickerData(title: "Любая", value: .any))
+        data.maximum.append(MoviesFilterListPickerData(title: "Любая", value: .any))
         
         for index in self.voteAverageMinimumValue...self.voteAverageMaximumValue {
-            data.minimum.append(MoviesFilterListPickerData(title: String(index), value: index))
-            data.maximum.append(MoviesFilterListPickerData(title: String(index), value: index))
+            data.minimum.append(MoviesFilterListPickerData(title: String(index), value: .value(index)))
+            data.maximum.append(MoviesFilterListPickerData(title: String(index), value: .value(index)))
         }
         
         return data
@@ -203,22 +219,22 @@ class MoviesFilterListViewModel {
     // MARK: -
     private func getVoteAverageText() -> String {
         let voteAverageText: String
-        switch (self.moviesFilterModel.voteAverageLte, self.moviesFilterModel.voteAverageGte) {
-        case (self.voteAverageAnyValue, self.voteAverageAnyValue):
+        switch (self.filterModel.voteAverageLte, self.filterModel.voteAverageGte) {
+        case (.any, .any):
             voteAverageText = "Любая"
-        case (self.voteAverageAnyValue, let maximumValue):
+        case (.any, .value(let maximumValue)):
             if maximumValue == self.voteAverageMaximumValue {
                 voteAverageText = String(format: "%d", maximumValue)
             } else {
                 voteAverageText = String(format: "%d и менее", maximumValue)
             }
-        case (let minimumValue, self.voteAverageAnyValue):
+        case (.value(let minimumValue), .any):
             if minimumValue == self.voteAverageMaximumValue {
                 voteAverageText = String(format: "%d", minimumValue)
             } else {
                 voteAverageText = String(format: "%d и более", minimumValue)
             }
-        case (let minimumValue, let maximumValue):
+        case (.value(let minimumValue), .value(let maximumValue)):
             if minimumValue == maximumValue {
                 voteAverageText = String(format: "%d", minimumValue)
             } else {
@@ -232,7 +248,7 @@ class MoviesFilterListViewModel {
     private func getReleaseDateText() -> String {
         let releaseDateText: String
         
-        switch (self.moviesFilterModel.releaseDateLte, self.moviesFilterModel.releaseDateGte) {
+        switch (self.filterModel.releaseDateLte, self.filterModel.releaseDateGte) {
         case (.any, .any):
             releaseDateText = "Любая"
         case (.any, .value(let maximumValue)):

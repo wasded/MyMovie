@@ -11,7 +11,7 @@ import Combine
 
 // MARK: - Delegate
 protocol MoviesFilterListViewControllerDelegate: class {
-    func saveDidTap(_ sender: MoviesFilterListViewController)
+    func saveDidTap(_ sender: MoviesFilterListViewController, filterModel: MoviesFilterModel)
     func closeDidTap(_ sender: MoviesFilterListViewController)
     func genresDidTap(_ sender: MoviesFilterListViewController)
 }
@@ -46,7 +46,7 @@ class MoviesFilterListViewController: UITableViewController {
     
     weak var delegate: MoviesFilterListViewControllerDelegate?
     
-    private(set) var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
+    private(set) var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
     private(set) var filtredReleaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
     
     private var selectedCell: CellType?
@@ -164,7 +164,7 @@ class MoviesFilterListViewController: UITableViewController {
         self.keyboardToolBar.closeButton.action = #selector(self.closeKeyboardButtonDidTap(_:))
         
         // adultTableViewCell
-        self.adultSwitch.isOn = self.viewModel.moviesFilterModel.isAdult
+        self.adultSwitch.isOn = self.viewModel.filterModel.isAdult
         self.adultSwitch.addTarget(self, action: #selector(self.adultSwitchDidChangedValue(_:)), for: .valueChanged)
         
         // voteAverageTableViewCell
@@ -197,7 +197,7 @@ class MoviesFilterListViewController: UITableViewController {
     
     // MARK: - Actions
     @objc func saveButtonDidTap(_ sender: UIBarButtonItem) {
-        self.delegate?.saveDidTap(self)
+        self.delegate?.saveDidTap(self, filterModel: self.viewModel.filterModel)
     }
     
     @objc func cancelButtonDidTap(_ sender: UIBarButtonItem) {
@@ -205,7 +205,7 @@ class MoviesFilterListViewController: UITableViewController {
     }
     
     @objc func adultSwitchDidChangedValue(_ sender: UISwitch) {
-        
+        self.viewModel.isAdultDidChanged(sender.isOn)
     }
     
     func voteAverageTableViewCellDidTap(_ sender: UITableViewCell) {

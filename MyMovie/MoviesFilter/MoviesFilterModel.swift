@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum MoviesFilterVoteAverage {
+    case any
+    case value(Int)
+}
+
 enum MoviesFilterVoteCount: CaseIterable {
     case any
     case few
@@ -54,11 +59,11 @@ enum MoviesFilterDuration: CaseIterable {
 }
 
 struct MoviesFilterModel {
-    var isAdult: Bool
-    var voteAverageLte: Int
-    var voteAverageGte: Int
-    var voteCount: MoviesFilterVoteCount
-    var releaseDateLte: MoviesFilterReleaseDate
-    var releaseDateGte: MoviesFilterReleaseDate
-    var duration: MoviesFilterDuration
+    var isAdult: Bool = false
+    var voteAverageLte: MoviesFilterVoteAverage = .any
+    var voteAverageGte: MoviesFilterVoteAverage = .any
+    var voteCount: MoviesFilterVoteCount = .any
+    var releaseDateLte: MoviesFilterReleaseDate = .any
+    var releaseDateGte: MoviesFilterReleaseDate = .any
+    var duration: MoviesFilterDuration = .any
 }

@@ -12,7 +12,7 @@ import SkeletonView
 import Combine
 
 protocol MoviesListViewControllerDelegate: class {
-    func openFilterDidTap(_ sender: MoviesListViewController)
+    func openFilterDidTap(_ sender: MoviesListViewController, filterModel: MoviesFilterModel)
 }
 
 class MoviesListViewController: UIViewController {
@@ -81,7 +81,7 @@ class MoviesListViewController: UIViewController {
     
     // MARK: - Actions
     @objc func filterButtonDidTap(_ sender: UIBarButtonItem) {
-        self.delegate?.openFilterDidTap(self)
+        self.delegate?.openFilterDidTap(self, filterModel: self.viewModel.filterModel)
     }
     
     // MARK: - Methods
