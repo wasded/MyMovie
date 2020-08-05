@@ -35,6 +35,13 @@ class MoviesListCoordinator: NavigationCoordinator {
 
 // MARK: - MoviesFilterCoordinatorDelegate
 extension MoviesListCoordinator: MoviesFilterCoordinatorDelegate {
+    func closeDidTap(_ sender: MoviesFilterCoordinator) {
+        self.dismiss {
+            self.stopChild(coordinator: sender) {
+            }
+        }
+    }
+    
     func saveButtonDidTap(_ sender: MoviesFilterCoordinator, filterModel: MoviesFilterModel) {
         self.dismiss {
             self.stopChild(coordinator: sender) {

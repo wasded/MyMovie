@@ -25,12 +25,13 @@ class MoviesFilterListViewModel {
     @Published var voteCountText: String = ""
     @Published var releaseDateText: String = ""
     @Published var durationText: String = ""
+    @Published var genresText: String = ""
     
-    var filterModel: MoviesFilterModel
-    var voteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
-    var voteCountPickerViewData = [MoviesFilterListPickerData<MoviesFilterVoteCount>]()
-    var releaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
-    var durationDatePickerViewData = [MoviesFilterListPickerData<MoviesFilterDuration>]()
+    private(set) var voteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
+    private(set) var voteCountPickerViewData = [MoviesFilterListPickerData<MoviesFilterVoteCount>]()
+    private(set) var releaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
+    private(set) var durationDatePickerViewData = [MoviesFilterListPickerData<MoviesFilterDuration>]()
+    private(set) var filterModel: MoviesFilterModel
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -63,6 +64,8 @@ class MoviesFilterListViewModel {
         
         self.durationDatePickerViewData = self.getDurationItems()
         self.durationDidChanged(self.filterModel.duration)
+        
+        self.genresDidChanged(self.filterModel.genres)
     }
     
     // MARK: - Methods
@@ -172,6 +175,18 @@ class MoviesFilterListViewModel {
         self.durationText = duration.title
     }
     
+    func genresDidChanged(_ genres: Set<MovieGenre>) {
+        let allGenres = Set(MovieGenre.allCases)
+        
+        if allGenres == genres {
+            self.filterModel.genres.removeAll()
+        } else {
+            self.filterModel.genres = genres
+        }
+        
+        self.genresText = self.getGenresText(self.filterModel.genres)
+    }
+    
     // MARK: - PickerView items
     private func getVoteAverageItems() -> (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>], maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]) {
         var data = (minimum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>](), maximum: [MoviesFilterListPickerData<MoviesFilterVoteAverage>]())
@@ -279,5 +294,16 @@ class MoviesFilterListViewModel {
         }
         
         return releaseDateText
+    }
+    
+    func getGenresText(_ genres: Set<MovieGenre>) -> String {
+        let genresText: String
+        if self.filterModel.genres.isEmpty {
+            genresText = "Любые"
+        } else {
+            genresText = genres.map({ $0.name }).joined(separator: ", ")
+        }
+        
+        return genresText
     }
 }

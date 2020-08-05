@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 import Combine
 
+protocol MoviesFilterGenresListViewControllerDelegate: class {
+    func selectedGenresDidChanged(_ genres: Set<MovieGenre>)
+}
+
 class MoviesFilterGenresListViewController: UIViewController {
     enum SortingType: SortingItem, CaseIterable {
         case popularity
@@ -38,6 +42,8 @@ class MoviesFilterGenresListViewController: UIViewController {
     }
     
     var viewModel: MoviesFilterGenresListViewModel!
+    
+    weak var delegate: MoviesFilterGenresListViewControllerDelegate?
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -89,7 +95,9 @@ class MoviesFilterGenresListViewController: UIViewController {
         
         self.viewModel.$selectedGenres
             .sink { [weak self] (value) in
-                self?.navigationItem.rightBarButtonItem?.isEnabled = !value.isEmpty
+                guard let self = self else { return }
+                self.navigationItem.rightBarButtonItem?.isEnabled = !value.isEmpty
+                self.delegate?.selectedGenresDidChanged(value)
         }
         .store(in: &self.cancellables)
         

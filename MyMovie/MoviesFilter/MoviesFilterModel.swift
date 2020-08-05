@@ -66,4 +66,5 @@ struct MoviesFilterModel {
     var releaseDateLte: MoviesFilterReleaseDate = .any
     var releaseDateGte: MoviesFilterReleaseDate = .any
     var duration: MoviesFilterDuration = .any
+    var genres: Set<MovieGenre> = Set<MovieGenre>()
 }

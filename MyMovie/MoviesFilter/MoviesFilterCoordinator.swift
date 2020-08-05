@@ -11,6 +11,7 @@ import Resolver
 
 protocol MoviesFilterCoordinatorDelegate: class {
     func saveButtonDidTap(_ sender: MoviesFilterCoordinator, filterModel: MoviesFilterModel)
+    func closeDidTap(_ sender: MoviesFilterCoordinator)
 }
 
 class MoviesFilterCoordinator: NavigationCoordinator {
@@ -46,17 +47,13 @@ extension MoviesFilterCoordinator: MoviesFilterListViewControllerDelegate {
     }
     
     func closeDidTap(_ sender: MoviesFilterListViewController) {
+        self.delegate?.closeDidTap(self)
     }
     
-    func genresDidTap(_ sender: MoviesFilterListViewController) {
+    func genresDidTap(_ sender: MoviesFilterListViewController, genres: Set<MovieGenre>) {
         // FIXME: Передавать модель
-        let viewController = MoviesFilterGenresListViewController.instantiate(viewModel: MoviesFilterGenresListViewModel(selectedGenres: Set()))
+        let viewController = MoviesFilterGenresListViewController.instantiate(viewModel: MoviesFilterGenresListViewModel(selectedGenres: genres))
+        viewController.delegate = sender
         self.show(viewController)
-    }
-    
-    func closeButtonDidTap(_ sender: MoviesFilterListViewController) {
-    }
-    
-    func saveButtonDidTap(_ sender: MoviesFilterListViewController) {
     }
 }

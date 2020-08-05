@@ -13,7 +13,7 @@ import Combine
 protocol MoviesFilterListViewControllerDelegate: class {
     func saveDidTap(_ sender: MoviesFilterListViewController, filterModel: MoviesFilterModel)
     func closeDidTap(_ sender: MoviesFilterListViewController)
-    func genresDidTap(_ sender: MoviesFilterListViewController)
+    func genresDidTap(_ sender: MoviesFilterListViewController, genres: Set<MovieGenre>)
 }
 
 class MoviesFilterListViewController: UITableViewController {
@@ -145,6 +145,12 @@ class MoviesFilterListViewController: UITableViewController {
         }
         .store(in: &self.cancellables)
         
+        self.viewModel.$genresText
+            .sink { [weak self](value) in
+                guard let self = self else { return }
+                self.genresLabel.text = value
+        }
+        .store(in: &self.cancellables)
     }
     
     private func configureInterface() {
@@ -224,7 +230,7 @@ class MoviesFilterListViewController: UITableViewController {
     }
     
     func genresTableViewCellDidTap(_ sender: UITableViewCell) {
-        self.delegate?.genresDidTap(self)
+        self.delegate?.genresDidTap(self, genres: self.viewModel.filterModel.genres)
     }
     
     func durationTableViewCellDidTap(_ sender: UITableViewCell) {
@@ -338,5 +344,11 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
         } else if pickerView === self.durationPickerView {
             self.viewModel.durationDidChanged(self.viewModel.durationDatePickerViewData[row].value)
         }
+    }
+}
+
+extension MoviesFilterListViewController: MoviesFilterGenresListViewControllerDelegate {
+    func selectedGenresDidChanged(_ genres: Set<MovieGenre>) {
+        self.viewModel.genresDidChanged(genres)
     }
 }
