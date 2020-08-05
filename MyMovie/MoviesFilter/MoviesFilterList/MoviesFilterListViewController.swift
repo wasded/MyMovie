@@ -32,13 +32,14 @@ class MoviesFilterListViewController: UITableViewController {
     @IBOutlet weak var voteCountTextField: UITextField!
     @IBOutlet weak var releaseDateTextField: UITextField!
     @IBOutlet weak var genresLabel: UILabel!
-    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var durationTextField: UITextField!
     
     // MARK: - Properties
     // Можно было использовать один пикер, но проще сделать несколько, так как с одним можно багов наловить
     let voteAveragePickerView = UIPickerView()
     let voteCountPickerView = UIPickerView()
     let releaseDatePickerView = UIPickerView()
+    let durationPickerView = UIPickerView()
     let keyboardToolBar = MoviesFilterListKeyboardToolBar()
     
     var viewModel: MoviesFilterListViewModel!
@@ -47,7 +48,9 @@ class MoviesFilterListViewController: UITableViewController {
     
     private(set) var filtredVoteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
     private(set) var filtredReleaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
+    
     private var selectedCell: CellType?
+    private var cancellables: Set<AnyCancellable> = []
     
     static func instantiate(viewModel: MoviesFilterListViewModel) -> MoviesFilterListViewController {
         let viewController = UIStoryboard.moviesFilterStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesFilterListViewController.self)) as! MoviesFilterListViewController
@@ -94,40 +97,54 @@ class MoviesFilterListViewController: UITableViewController {
         self.voteAverageTextField.isEnabled = false
         self.voteCountTextField.isEnabled = false
         self.releaseDateTextField.isEnabled = false
+        self.durationTextField.isEnabled = false
     }
     
     private func bindingToProperties() {
         self.viewModel.$voteAverageText
-            .sink { (value) in
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 self.voteAverageTextField.text = value
         }
-        .store(in: &self.viewModel.cancellables)
+        .store(in: &self.cancellables)
         
         self.viewModel.$filtredVoteAveragePickerViewData
-            .sink(receiveValue: { (value) in
+            .sink(receiveValue: { [weak self] (value) in
+                guard let self = self else { return }
                 self.filtredVoteAveragePickerViewData = value
                 self.voteAveragePickerView.reloadAllComponents()
             })
-            .store(in: &self.viewModel.cancellables)
+            .store(in: &self.cancellables)
         
         self.viewModel.$voteCountText
-            .sink { (value) in
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 self.voteCountTextField.text = value
         }
-        .store(in: &self.viewModel.cancellables)
+        .store(in: &self.cancellables)
         
         self.viewModel.$filtredReleaseDatePickerViewData
-            .sink { (value) in
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 self.filtredReleaseDatePickerViewData = value
                 self.releaseDatePickerView.reloadAllComponents()
         }
-        .store(in: &self.viewModel.cancellables)
+        .store(in: &self.cancellables)
         
         self.viewModel.$releaseDateText
-            .sink { (value) in
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 self.releaseDateTextField.text = value
         }
-        .store(in: &self.viewModel.cancellables)
+        .store(in: &self.cancellables)
+        
+        self.viewModel.$durationText
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
+                self.durationTextField.text = value
+        }
+        .store(in: &self.cancellables)
+        
     }
     
     private func configureInterface() {
@@ -155,23 +172,24 @@ class MoviesFilterListViewController: UITableViewController {
         self.voteAveragePickerView.dataSource = self
         self.voteAverageTextField.inputView = self.voteAveragePickerView
         self.voteAverageTextField.inputAccessoryView = self.keyboardToolBar
-        self.voteAverageTextField.text = self.viewModel.voteAverageText
         
         // voteCountTableViewCell
         self.voteCountPickerView.delegate = self
         self.voteCountPickerView.dataSource = self
         self.voteCountTextField.inputView = self.voteCountPickerView
         self.voteCountTextField.inputAccessoryView = self.keyboardToolBar
-        self.voteCountTextField.text = self.viewModel.voteCountText
         
         // releaseDateTableViewCell
         self.releaseDatePickerView.delegate = self
         self.releaseDatePickerView.dataSource = self
         self.releaseDateTextField.inputView = self.releaseDatePickerView
         self.releaseDateTextField.inputAccessoryView = self.keyboardToolBar
-        self.releaseDateTextField.text = self.viewModel.releaseDateText
         
-        // genresTableViewCell
+        // durationTableViewCell
+        self.durationPickerView.delegate = self
+        self.durationPickerView.dataSource = self
+        self.durationTextField.inputView = self.durationPickerView
+        self.durationTextField.inputAccessoryView = self.keyboardToolBar
         
         
         self.disableAllTextFields()
@@ -210,7 +228,8 @@ class MoviesFilterListViewController: UITableViewController {
     }
     
     func durationTableViewCellDidTap(_ sender: UITableViewCell) {
-        
+        self.durationTextField.isEnabled = true
+        self.durationTextField.becomeFirstResponder()
     }
     
     @objc func closeKeyboardButtonDidTap(_ sender: UIBarButtonItem) {
@@ -250,6 +269,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             return 1
         } else if pickerView === self.releaseDatePickerView {
             return 2
+        } else if pickerView === self.durationPickerView {
+            return 1
         } else {
             return 0
         }
@@ -270,6 +291,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             } else {
                 return self.filtredReleaseDatePickerViewData.maximum.count
             }
+        } else if pickerView === self.durationPickerView {
+            return self.viewModel.durationDatePickerViewData.count
         } else {
             return 0
         }
@@ -290,6 +313,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             } else {
                 return self.filtredReleaseDatePickerViewData.maximum[row].title
             }
+            } else if pickerView === self.durationPickerView {
+            return self.viewModel.durationDatePickerViewData[row].title
         } else {
             return nil
         }
@@ -310,6 +335,8 @@ extension MoviesFilterListViewController: UIPickerViewDelegate, UIPickerViewData
             } else {
                 self.viewModel.releaseDateDidChanged(minimum: nil, maximum: self.filtredReleaseDatePickerViewData.maximum[row].value)
             }
+        } else if pickerView === self.durationPickerView {
+            self.viewModel.durationDidChanged(self.viewModel.durationDatePickerViewData[row].value)
         }
     }
 }

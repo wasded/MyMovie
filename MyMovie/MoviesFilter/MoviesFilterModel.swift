@@ -14,7 +14,7 @@ enum MoviesFilterVoteCount: CaseIterable {
     case medium
     case many
     
-    func getTitle() -> String {
+    var title: String {
         switch self {
         case .any:
             return "Любое"
@@ -33,6 +33,26 @@ enum MoviesFilterReleaseDate {
     case value(Date)
 }
 
+enum MoviesFilterDuration: CaseIterable {
+    case any
+    case short
+    case medium
+    case long
+    
+    var title: String {
+        switch self {
+        case .any:
+            return "Любая"
+        case .short:
+            return "Короткая"
+        case .medium:
+            return "Средняя"
+        case .long:
+            return "Длинная"
+        }
+    }
+}
+
 struct MoviesFilterModel {
     var isAdult: Bool
     var voteAverageLte: Int
@@ -40,4 +60,5 @@ struct MoviesFilterModel {
     var voteCount: MoviesFilterVoteCount
     var releaseDateLte: MoviesFilterReleaseDate
     var releaseDateGte: MoviesFilterReleaseDate
+    var duration: MoviesFilterDuration
 }

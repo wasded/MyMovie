@@ -23,13 +23,15 @@ class MoviesFilterListViewModel {
     @Published var voteAverageText: String = ""
     @Published var voteCountText: String = ""
     @Published var releaseDateText: String = ""
+    @Published var durationText: String = ""
     
     var moviesFilterModel: MoviesFilterModel
     var voteAveragePickerViewData = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
     var voteCountPickerViewData = [MoviesFilterListPickerData<MoviesFilterVoteCount>]()
     var releaseDatePickerViewData = (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>](), maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]())
+    var durationDatePickerViewData = [MoviesFilterListPickerData<MoviesFilterDuration>]()
     
-    var cancellables: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     
     private let voteAverageAnyValue = -1
     private let voteAverageMinimumValue = 0
@@ -58,6 +60,9 @@ class MoviesFilterListViewModel {
         
         self.releaseDatePickerViewData = self.getReleaseDateItems()
         self.releaseDateDidChanged(minimum: self.moviesFilterModel.releaseDateLte, maximum: self.moviesFilterModel.releaseDateGte)
+        
+        self.durationDatePickerViewData = self.getDurationItems()
+        self.durationDidChanged(self.moviesFilterModel.duration)
     }
     
     // MARK: - Methods
@@ -97,7 +102,7 @@ class MoviesFilterListViewModel {
     func voteCountDidChanged(voteCount: MoviesFilterVoteCount) {
         self.moviesFilterModel.voteCount = voteCount
         
-        self.voteCountText = voteCount.getTitle()
+        self.voteCountText = voteCount.title
     }
     
     func releaseDateDidChanged(minimum: MoviesFilterReleaseDate?, maximum: MoviesFilterReleaseDate?) {
@@ -145,6 +150,12 @@ class MoviesFilterListViewModel {
         self.releaseDateText = self.getReleaseDateText()
     }
     
+    func durationDidChanged(_ duration: MoviesFilterDuration) {
+        self.moviesFilterModel.duration = duration
+        
+        self.durationText = duration.title
+    }
+    
     // MARK: - PickerView items
     private func getVoteAverageItems() -> (minimum: [MoviesFilterListPickerData<Int>], maximum: [MoviesFilterListPickerData<Int>]) {
         var data = (minimum: [MoviesFilterListPickerData<Int>](), maximum: [MoviesFilterListPickerData<Int>]())
@@ -161,12 +172,8 @@ class MoviesFilterListViewModel {
     }
     
     private func getVoteCountItems() -> [MoviesFilterListPickerData<MoviesFilterVoteCount>] {
-        var data = [MoviesFilterListPickerData<MoviesFilterVoteCount>]()
-        
         // FIXME: Не очень крутая идея делать колличество оценок как "Много"/"Мало" без конкретного колличества, но делать поле где пользователь сам задает промежуток тоже не очень. Стоит подумать над тем чтобы логику перенести на другую страницу
-        data.append(contentsOf: MoviesFilterVoteCount.allCases.map({ MoviesFilterListPickerData(title: $0.getTitle(), value: $0) }))
-        
-        return data
+        return MoviesFilterVoteCount.allCases.map({ MoviesFilterListPickerData<MoviesFilterVoteCount>(title: $0.title, value: $0) })
     }
     
     private func getReleaseDateItems() -> (minimum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>], maximum: [MoviesFilterListPickerData<MoviesFilterReleaseDate>]) {
@@ -187,6 +194,10 @@ class MoviesFilterListViewModel {
         }
         
         return data
+    }
+    
+    private func getDurationItems() -> [MoviesFilterListPickerData<MoviesFilterDuration>] {
+        return MoviesFilterDuration.allCases.map({ MoviesFilterListPickerData<MoviesFilterDuration>(title: $0.title, value: $0) })
     }
     
     // MARK: -
