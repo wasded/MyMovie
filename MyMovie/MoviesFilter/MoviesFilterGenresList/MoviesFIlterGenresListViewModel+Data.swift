@@ -8,7 +8,6 @@
 
 import Foundation
 
-// FIXME: Возможно можно на дженериках сделать такой филтр универсальным
 extension MoviesFilterGenresListViewModel {
     func getItems(selectedGenres: Set<MovieGenre>, sortingType: SortingType) -> [MovieGenreTableViewCellData] {
         var genres = MovieGenre.allCases

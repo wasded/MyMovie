@@ -21,6 +21,11 @@ class MoviesListViewModel {
     @Published var filterModel = MoviesFilterModel()
     
     private var cancellables: Set<AnyCancellable> = []
+    private let releasDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-DD"
+        return dateFormatter
+    }()
     
     // MARK: - Init
     init(backendController: BackendDiscoverController) {
@@ -34,6 +39,7 @@ class MoviesListViewModel {
     
     private func bindingToProperties() {
         Publishers.CombineLatest4(self.$currentPage, self.$filter, self.$sortType, self.$filterModel)
+            .dropFirst()
             .sink(receiveValue: { [weak self] (value) in
                 guard let self = self else { return }
                 
@@ -54,7 +60,33 @@ class MoviesListViewModel {
     
     // MARK: - Mehtods
     func loadMovies(page: Int, sortBy: MovieSortingType, filterModel: MoviesFilterModel) {
-        self.backendController.getMovies(model: MovieDiscoverRequest(language: Locale.preferredLanguages.first, region: Locale.current.regionCode, sortBy: sortBy, page: page))
+        var releaseLte: String?
+        var releaseGte: String?
+        
+        if let releaseDateLte = filterModel.releaseDateLte.value {
+            releaseLte = self.releasDateFormatter.string(from: releaseDateLte)
+        }
+        
+        if let releaseDateGte = filterModel.releaseDateGte.value {
+            releaseGte = self.releasDateFormatter.string(from: releaseDateGte)
+        }
+        
+        let request = MovieDiscoverRequest(language: Locale.preferredLanguages.first,
+                                           region: Locale.current.regionCode,
+                                           sortBy: sortBy,
+                                           includeAdult: filterModel.isAdult,
+                                           page: page,
+                                           releaseDateLte: releaseLte,
+                                           releaseDateGte: releaseGte,
+                                           voteCountLte: filterModel.voteCount.lte,
+                                           voteCountGte: filterModel.voteCount.gte,
+                                           voteAverageLte: filterModel.voteAverageLte.value,
+                                           voteAverageGte: filterModel.voteAverageGte.value,
+                                           withGenres: filterModel.genres.map({ $0.name }).joined(separator: ","),
+                                           withRuntimeLte: filterModel.duration.lte,
+                                           withRuntimeGte: filterModel.duration.gte)
+        
+        self.backendController.getMovies(model: request)
             .sink(receiveCompletion: { (completion) in
                 print()
             }) { (response) in

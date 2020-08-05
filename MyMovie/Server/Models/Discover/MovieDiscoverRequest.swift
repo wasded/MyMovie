@@ -27,8 +27,8 @@ struct MovieDiscoverRequest: Codable {
     var releaseDateGte: String?
     var withReleaseType: Int?
     var year: Int?
-    var voteCountLte: Double?
-    var voteCountGte: Double?
+    var voteCountLte: Int?
+    var voteCountGte: Int?
     var voteAverageLte: Double?
     var voteAverageGte: Double?
     var withCast: String?
@@ -39,8 +39,8 @@ struct MovieDiscoverRequest: Codable {
     var withoutGenres: String?
     var withKeywords: String?
     var withoutKeywords: String?
-    var withRuntimeLte: String?
-    var withRuntimeGte: String?
+    var withRuntimeLte: Int?
+    var withRuntimeGte: Int?
     var withOriginalLanguage: String?
     
     enum CodingKeys: String, CodingKey {
@@ -79,7 +79,7 @@ struct MovieDiscoverRequest: Codable {
     }
     
     // MARK: - Init
-    init(language: String? = nil, region: String? = nil, sortBy: MovieSortingType? = nil, certificationCountry: String? = nil, certification: String? = nil, certificationLte: String? = nil, certificationGte: String? = nil, includeAdult: Bool? = nil, includeVideo: Bool? = nil, page: Int? = nil, primaryReleaseYear: Int? = nil, primaryReleaseDateLte: String? = nil, primaryReleaseDateGte: String? = nil, releaseDateLte: String? = nil, releaseDateGte: String? = nil, withReleaseType: Int? = nil, year: Int? = nil, voteCountLte: Double? = nil, voteCountGte: Double? = nil, voteAverageLte: Double? = nil, voteAverageGte: Double? = nil, withCast: String? = nil, withCrew: String? = nil, withPeople: String? = nil, withCompanies: String? = nil, withGenres: String? = nil, withoutGenres: String? = nil, withKeywords: String? = nil, withoutKeywords: String? = nil, withRuntimeLte: String? = nil, withRuntimeGte: String? = nil, withOriginalLanguage: String? = nil) {
+    init(language: String? = nil, region: String? = nil, sortBy: MovieSortingType? = nil, certificationCountry: String? = nil, certification: String? = nil, certificationLte: String? = nil, certificationGte: String? = nil, includeAdult: Bool? = nil, includeVideo: Bool? = nil, page: Int? = nil, primaryReleaseYear: Int? = nil, primaryReleaseDateLte: String? = nil, primaryReleaseDateGte: String? = nil, releaseDateLte: String? = nil, releaseDateGte: String? = nil, withReleaseType: Int? = nil, year: Int? = nil, voteCountLte: Int? = nil, voteCountGte: Int? = nil, voteAverageLte: Double? = nil, voteAverageGte: Double? = nil, withCast: String? = nil, withCrew: String? = nil, withPeople: String? = nil, withCompanies: String? = nil, withGenres: String? = nil, withoutGenres: String? = nil, withKeywords: String? = nil, withoutKeywords: String? = nil, withRuntimeLte: Int? = nil, withRuntimeGte: Int? = nil, withOriginalLanguage: String? = nil) {
         self.language = language
         self.region = region
         self.sortBy = sortBy

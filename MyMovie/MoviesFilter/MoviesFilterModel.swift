@@ -11,6 +11,15 @@ import Foundation
 enum MoviesFilterVoteAverage {
     case any
     case value(Int)
+    
+    var value: Double? {
+        switch self {
+        case .any:
+            return nil
+        case .value(let value):
+            return Double(value)
+        }
+    }
 }
 
 enum MoviesFilterVoteCount: CaseIterable {
@@ -31,11 +40,46 @@ enum MoviesFilterVoteCount: CaseIterable {
             return "Много"
         }
     }
+    
+    var gte: Int? {
+        switch self {
+        case .any:
+            return nil
+        case .few:
+            return nil
+        case .medium:
+            return 500
+        case .many:
+            return 1500
+        }
+    }
+    
+    var lte: Int? {
+        switch self {
+        case .any:
+            return nil
+        case .few:
+            return 500
+        case .medium:
+            return 100
+        case .many:
+            return nil
+        }
+    }
 }
 
 enum MoviesFilterReleaseDate {
     case any
     case value(Date)
+    
+    var value: Date? {
+        switch self {
+        case .any:
+            return nil
+        case .value(let value):
+            return value
+        }
+    }
 }
 
 enum MoviesFilterDuration: CaseIterable {
@@ -54,6 +98,32 @@ enum MoviesFilterDuration: CaseIterable {
             return "Средняя"
         case .long:
             return "Длинная"
+        }
+    }
+    
+    var gte: Int? {
+        switch self {
+        case .any:
+            return nil
+        case .short:
+            return nil
+        case .medium:
+            return 60
+        case .long:
+            return 60
+        }
+    }
+    
+    var lte: Int? {
+        switch self {
+        case .any:
+            return nil
+        case .short:
+            return 60
+        case .medium:
+            return 100
+        case .long:
+            return nil
         }
     }
 }

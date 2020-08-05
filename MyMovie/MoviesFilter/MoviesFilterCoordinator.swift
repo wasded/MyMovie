@@ -32,7 +32,6 @@ class MoviesFilterCoordinator: NavigationCoordinator {
     }
     
     override func prepare() {
-        // FIXME: Нужно модель передовать
         let viewController = MoviesFilterListViewController.instantiate(viewModel: MoviesFilterListViewModel(moviesFilterModel: self.filterModel))
         viewController.delegate = self
         self.root(viewController)
@@ -51,7 +50,6 @@ extension MoviesFilterCoordinator: MoviesFilterListViewControllerDelegate {
     }
     
     func genresDidTap(_ sender: MoviesFilterListViewController, genres: Set<MovieGenre>) {
-        // FIXME: Передавать модель
         let viewController = MoviesFilterGenresListViewController.instantiate(viewModel: MoviesFilterGenresListViewModel(selectedGenres: genres))
         viewController.delegate = sender
         self.show(viewController)
