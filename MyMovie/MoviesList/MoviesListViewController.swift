@@ -9,18 +9,47 @@
 import UIKit
 import Foundation
 import SkeletonView
-import SwiftUI
+import Combine
 
 protocol MoviesListViewControllerDelegate: class {
     func openFilterDidTap(_ sender: MoviesListViewController)
 }
 
 class MoviesListViewController: UIViewController {
+    enum SortingType: SortingItem, CaseIterable {
+        case pupularity
+        case releaseDate
+        case revenue
+        case primaryReleaseDate
+        case originalTitle
+        case voteAverage
+        case voteCount
+        
+        var text: String {
+            switch self {
+            case .pupularity:
+                return "Популярность"
+            case .releaseDate:
+                return "Дата релиза"
+            case .revenue:
+                return "Сборы"
+            case .primaryReleaseDate:
+                return "Дата основного выпуска"
+            case .originalTitle:
+                return "Название"
+            case .voteAverage:
+                return "Оценки"
+            case .voteCount:
+                return "Колличество оценок"
+            }
+        }
+    }
+    
     // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
         
     // MARK: - Proprties
-    let sortingView = SortingView()
+    let sortingView = SortingView<SortingType>()
     
     var items: [MovieDiscover] = [] {
         didSet {
@@ -33,6 +62,8 @@ class MoviesListViewController: UIViewController {
     var viewModel: MoviesListViewModel!
     
     weak var delegate: MoviesListViewControllerDelegate?
+    
+    private var cancellables: Set<AnyCancellable> = []
     
     static func instantiate(viewModel: MoviesListViewModel) -> MoviesListViewController {
         let viewController = UIStoryboard.moviesListStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesListViewController.self)) as! MoviesListViewController
@@ -59,7 +90,36 @@ class MoviesListViewController: UIViewController {
             .sink { (response) in
                 self.items = response
         }
-        .store(in: &self.viewModel.cancellables)
+        .store(in: &self.cancellables)
+        
+        Publishers.CombineLatest(self.sortingView.$selectedSortingType, self.sortingView.$isAscOrder)
+            .sink { (value) in
+                let isAscOrder = value.1
+                let selectedSortingType = value.0
+                
+                if let selectedSortingType = selectedSortingType {
+                    let movieSortingType: MovieSortingType
+                    switch selectedSortingType {
+                    case .pupularity:
+                        movieSortingType = isAscOrder ? .popularityAsc : .popularityDesc
+                    case .releaseDate:
+                        movieSortingType = isAscOrder ? .releaseDateAsc : .releaseDateDesc
+                    case .revenue:
+                        movieSortingType = isAscOrder ? .revenueAsc : .revenueDesc
+                    case .primaryReleaseDate:
+                        movieSortingType = isAscOrder ? .primaryReleaseDateAsc : .primaryReleaseDateDesc
+                    case .originalTitle:
+                        movieSortingType = isAscOrder ? .originalTitleAsc : .originalTitleDesc
+                    case .voteAverage:
+                        movieSortingType = isAscOrder ? .voteAverageAsc : .voteAverageDesc
+                    case .voteCount:
+                        movieSortingType = isAscOrder ? .voteCountAsc : .voteCountDesc
+                    }
+                    
+                    self.viewModel.sortType = movieSortingType
+                }
+        }
+        .store(in: &self.cancellables)
     }
     
     private func configureInterface() {
@@ -69,9 +129,9 @@ class MoviesListViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "profileTabBar"), style: .plain, target: self, action: #selector(self.filterButtonDidTap(_:)))
 
         // sortingView
-        let sortingViewHeight: CGFloat = 42
-        self.sortingView.delegate = self
+        let sortingViewHeight: CGFloat = 58
         self.sortingView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: sortingViewHeight)
+        self.sortingView.sortingTypes = SortingType.allCases
         
         // collectionView
         self.tableView.showsHorizontalScrollIndicator = false
@@ -107,30 +167,5 @@ extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
         let data = self.items[indexPath.row]
         cell.data = MovieTableViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title, releaseDate: data.releaseDate, genres: data.genreIDS.map({ $0.name }), voteAverage: data.voteAverage, description: data.overview)
         return cell
-    }
-}
-
-// MARK: - SortingViewDelegate
-extension MoviesListViewController: SortingViewDelegate {
-    func valueChanged(sortingType: SortingView.SortingType, isAscOrder: Bool) {
-        let movieSortingType: MovieSortingType
-        switch sortingType {
-        case .pupularity:
-            movieSortingType = isAscOrder ? .popularityAsc : .popularityDesc
-        case .releaseDate:
-            movieSortingType = isAscOrder ? .releaseDateAsc : .releaseDateDesc
-        case .revenue:
-            movieSortingType = isAscOrder ? .revenueAsc : .revenueDesc
-        case .primaryReleaseDate:
-            movieSortingType = isAscOrder ? .primaryReleaseDateAsc : .primaryReleaseDateDesc
-        case .originalTitle:
-            movieSortingType = isAscOrder ? .originalTitleAsc : .originalTitleDesc
-        case .voteAverage:
-            movieSortingType = isAscOrder ? .voteAverageAsc : .voteAverageDesc
-        case .voteCount:
-            movieSortingType = isAscOrder ? .voteCountAsc : .voteCountDesc
-        }
-        
-        self.viewModel.sortType = movieSortingType
     }
 }

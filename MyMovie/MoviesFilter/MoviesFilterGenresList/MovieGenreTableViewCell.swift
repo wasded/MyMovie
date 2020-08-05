@@ -53,8 +53,8 @@ class MovieGenreTableViewCell: UITableViewCell {
         self.isSelectedImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
         self.isSelectedImageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
         self.isSelectedImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        self.isSelectedImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        self.isSelectedImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        self.isSelectedImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 12).isActive = true
+        self.isSelectedImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -12).isActive = true
         self.contentMode = .scaleAspectFit
     }
     

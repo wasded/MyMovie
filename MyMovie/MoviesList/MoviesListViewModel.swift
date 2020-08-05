@@ -19,7 +19,7 @@ class MoviesListViewModel {
     @Published var filter: Int = 0
     @Published var currentPage: Int = 1
     
-    var cancellables: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Init
     init(backendController: BackendDiscoverController) {

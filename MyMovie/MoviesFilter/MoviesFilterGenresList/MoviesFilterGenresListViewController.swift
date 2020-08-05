@@ -8,12 +8,29 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class MoviesFilterGenresListViewController: UIViewController {
+    enum SortingType: SortingItem, CaseIterable {
+        case popularity
+        case alphabetically
+        
+        var text: String {
+            switch self {
+            case .popularity:
+                return "Популярность"
+            case .alphabetically:
+                return "По алфавиту"
+            }
+        }
+    }
+    
     // MARK: - Outlets
     @IBOutlet weak var tableView: UITableView!
     
     // MARK: - Properties
+    let sortingView = SortingView<SortingType>()
+    
     var items = [MovieGenreTableViewCellData]() {
         didSet {
             self.itemsDidChanged(oldItems: oldValue, newItems: self.items)
@@ -21,6 +38,8 @@ class MoviesFilterGenresListViewController: UIViewController {
     }
     
     var viewModel: MoviesFilterGenresListViewModel!
+    
+    private var cancellables: Set<AnyCancellable> = []
     
     static func instantiate(viewModel: MoviesFilterGenresListViewModel) -> MoviesFilterGenresListViewController {
         let viewController = UIStoryboard.moviesFilterStoryboard.instantiateViewController(withIdentifier: String(describing: MoviesFilterGenresListViewController.self)) as! MoviesFilterGenresListViewController
@@ -31,22 +50,30 @@ class MoviesFilterGenresListViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        self.bindingToProperties()
-        self.registerCells()
         
+        self.registerCells()
         self.configureInterface()
+        
+        self.bindingToProperties()
     }
     
     // MARK: - Methods
     private func configureInterface() {
         // self
+        self.title = "Жанры"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сбросить", style: .plain, target: self, action: #selector(self.clearGenresButtonDidTap(_:)))
+        
+        // sortingView
+        let sortingViewHeight: CGFloat = 58
+        self.sortingView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: sortingViewHeight)
+        self.sortingView.sortingTypes = SortingType.allCases
         
         // tableView
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView()
-        
+        self.tableView.tableHeaderView = self.sortingView
+        self.tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
     }
     
     private func registerCells() {
@@ -55,10 +82,35 @@ class MoviesFilterGenresListViewController: UIViewController {
     
     private func bindingToProperties() {
         self.viewModel.$items
-            .sink { (items) in
-                self.items = items
+            .sink { (value) in
+                self.items = value
         }
-        .store(in: &self.viewModel.cancellables)
+        .store(in: &self.cancellables)
+        
+        self.viewModel.$selectedGenres
+            .sink { (value) in
+                self.navigationItem.rightBarButtonItem?.isEnabled = !value.isEmpty
+        }
+        .store(in: &self.cancellables)
+        
+        Publishers.CombineLatest(self.sortingView.$selectedSortingType, self.sortingView.$isAscOrder)
+            .sink { (value) in
+                let isAscOrder = value.1
+                let selectedSortingType = value.0
+                
+                if let selectedSortingType = selectedSortingType {
+                    let value: MoviesFilterGenresListViewModel.SortingType
+                    switch selectedSortingType {
+                    case .popularity:
+                        value = isAscOrder ? .popularityAsc : .popularityDesc
+                    case .alphabetically:
+                        value = isAscOrder ? .alphabeticallyAsc : .alphabeticallyDesc
+                    }
+                    
+                    self.viewModel.sortingType = value
+                }
+        }
+        .store(in: &self.cancellables)
     }
     
     // FIXME: В iOS13 вроде как появился свой механизм дифов, изучить и переделать на него
@@ -99,6 +151,9 @@ class MoviesFilterGenresListViewController: UIViewController {
     }
     
     // MARK: - Actions
+    @objc func clearGenresButtonDidTap(_ sender: UIBarButtonItem) {
+        self.viewModel.selectedGenres.removeAll()
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -125,3 +180,19 @@ extension MoviesFilterGenresListViewController: UITableViewDelegate, UITableView
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+//
+//extension MoviesFilterGenresListViewController: SortingGenresViewDelegate {
+//    func valueChanged(sortingType: SortingGenresView.SortingType, isAscOrder: Bool) {
+//        let value: MoviesFilterGenresListViewModel.SortingType
+//        switch sortingType {
+//        case .popularity:
+//            value = isAscOrder ? .popularityAsc : .popularityDesc
+//        case .alphabetically:
+//            value = isAscOrder ? .alphabeticallyAsc : .alphabeticallyDesc
+//        }
+//
+//        self.viewModel.sortingType = value
+//    }
+//
+//
+//}

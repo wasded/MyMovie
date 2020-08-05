@@ -8,8 +8,22 @@
 
 import Foundation
 
+// FIXME: Возможно можно на дженериках сделать такой филтр универсальным
 extension MoviesFilterGenresListViewModel {
-    func getItems(selectedGenres: Set<MovieGenre>, filterType: Int) -> [MovieGenreTableViewCellData] {
-        return MovieGenre.allCases.map({ MovieGenreTableViewCellData(type: $0, isSelected: selectedGenres.contains($0)) })
+    func getItems(selectedGenres: Set<MovieGenre>, sortingType: SortingType) -> [MovieGenreTableViewCellData] {
+        var genres = MovieGenre.allCases
+        
+        // Сортировка по популярности тут фейковая)))
+        switch sortingType {
+        case .popularityAsc: break
+        case .popularityDesc:
+            genres.reverse()
+        case .alphabeticallyAsc:
+            genres.sort(by: { $0.name > $1.name } )
+        case .alphabeticallyDesc:
+            genres.sort(by: { $0.name < $1.name } )
+        }
+        
+        return genres.map({ MovieGenreTableViewCellData(type: $0, isSelected: selectedGenres.contains($0)) })
     }
 }

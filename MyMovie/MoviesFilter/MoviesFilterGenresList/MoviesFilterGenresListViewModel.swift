@@ -10,12 +10,19 @@ import Foundation
 import Combine
 
 class MoviesFilterGenresListViewModel {
+    enum SortingType {
+        case popularityAsc
+        case popularityDesc
+        case alphabeticallyAsc
+        case alphabeticallyDesc
+    }
+    
     // MARK: - Proprties
     @Published var items: [MovieGenreTableViewCellData] = []
     @Published var selectedGenres: Set<MovieGenre>
-    @Published var filterType: Int = 0
+    @Published var sortingType: SortingType = .popularityDesc
     
-    var cancellables: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Init
     init(selectedGenres: Set<MovieGenre>) {
@@ -25,12 +32,12 @@ class MoviesFilterGenresListViewModel {
     
     // MARK: - Methods
     private func bindingToProperties() {
-        Publishers.CombineLatest(self.$selectedGenres, self.$filterType)
+        Publishers.CombineLatest(self.$selectedGenres, self.$sortingType)
             .sink { (value) in
                 let selectedGenres = value.0
                 let filterType = value.1
                 
-                self.items = self.getItems(selectedGenres: selectedGenres, filterType: filterType)
+                self.items = self.getItems(selectedGenres: selectedGenres, sortingType: filterType)
                 
         }
         .store(in: &self.cancellables)
