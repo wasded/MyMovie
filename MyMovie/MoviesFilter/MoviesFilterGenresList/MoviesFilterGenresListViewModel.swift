@@ -29,11 +29,12 @@ class MoviesFilterGenresListViewModel {
         self.selectedGenres = selectedGenres
         self.bindingToProperties()
     }
-    
+
     // MARK: - Methods
     private func bindingToProperties() {
         Publishers.CombineLatest(self.$selectedGenres, self.$sortingType)
-            .sink { (value) in
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 let selectedGenres = value.0
                 let filterType = value.1
                 

@@ -87,13 +87,14 @@ class MoviesListViewController: UIViewController {
     // MARK: - Methods
     private func bindingToProperties() {
         self.viewModel.$discoveredMovies
-            .sink { (response) in
-                self.items = response
+            .sink { [weak self] (response) in
+                self?.items = response
         }
         .store(in: &self.cancellables)
         
         Publishers.CombineLatest(self.sortingView.$selectedSortingType, self.sortingView.$isAscOrder)
-            .sink { (value) in
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 let isAscOrder = value.1
                 let selectedSortingType = value.0
                 

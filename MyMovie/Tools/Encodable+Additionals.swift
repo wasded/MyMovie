@@ -9,7 +9,6 @@
 import Foundation
 
 extension Encodable {
-    
     subscript(key: String) -> Any? {
         return dictionary[key]
     }

@@ -82,19 +82,21 @@ class MoviesFilterGenresListViewController: UIViewController {
     
     private func bindingToProperties() {
         self.viewModel.$items
-            .sink { (value) in
-                self.items = value
+            .sink { [weak self] (value) in
+                self?.items = value
         }
         .store(in: &self.cancellables)
         
         self.viewModel.$selectedGenres
-            .sink { (value) in
-                self.navigationItem.rightBarButtonItem?.isEnabled = !value.isEmpty
+            .sink { [weak self] (value) in
+                self?.navigationItem.rightBarButtonItem?.isEnabled = !value.isEmpty
         }
         .store(in: &self.cancellables)
         
         Publishers.CombineLatest(self.sortingView.$selectedSortingType, self.sortingView.$isAscOrder)
-            .sink { (value) in
+            .dropFirst()
+            .sink { [weak self] (value) in
+                guard let self = self else { return }
                 let isAscOrder = value.1
                 let selectedSortingType = value.0
                 
