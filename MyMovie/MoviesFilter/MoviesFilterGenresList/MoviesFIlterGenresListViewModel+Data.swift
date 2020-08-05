@@ -15,9 +15,10 @@ extension MoviesFilterGenresListViewModel {
         
         // Сортировка по популярности тут фейковая)))
         switch sortingType {
-        case .popularityAsc: break
-        case .popularityDesc:
+        case .popularityAsc:
             genres.reverse()
+        case .popularityDesc:
+            break
         case .alphabeticallyAsc:
             genres.sort(by: { $0.name > $1.name } )
         case .alphabeticallyDesc:

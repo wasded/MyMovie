@@ -17,7 +17,11 @@ protocol SortingItem {
 class SortingView<T: SortingItem>: UIView {
     // MARK: - Properties
     @Published var selectedSortingType: T?
-    @Published var isAscOrder: Bool = false
+    @Published var isAscOrder: Bool = false {
+        didSet {
+            self.setImageForButton(for: self.isAscOrder)
+        }
+    }
     
     var sortingTypes = [T]() {
         didSet {
