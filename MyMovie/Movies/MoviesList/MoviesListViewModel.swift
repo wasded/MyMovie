@@ -16,7 +16,6 @@ class MoviesListViewModel {
     
     @Published var discoveredMovies: [MovieDiscover] = []
     @Published var sortType: MovieSortingType = .popularityDesc
-    @Published var filter: Int = 0
     @Published var currentPage: Int = 1
     @Published var filterModel = MoviesFilterModel()
     
@@ -39,17 +38,14 @@ class MoviesListViewModel {
     }
     
     private func bindingToProperties() {
-        Publishers.CombineLatest4(self.$currentPage, self.$filter, self.$sortType, self.$filterModel)
+        Publishers.CombineLatest3(self.$currentPage, self.$sortType, self.$filterModel)
             .dropFirst()
             .sink(receiveValue: { [weak self] (value) in
                 guard let self = self else { return }
                 
-                var page = value.0
-                let filter = value.1
-                let sortType = value.2
-                let filterModel = value.3
+                var (page, sortType, filterModel) = value
                 
-                if self.filter != filter || self.sortType != sortType {
+                if self.sortType != sortType || self.currentPage != page {
                     self.currentPage = 1
                     page = 1
                 }

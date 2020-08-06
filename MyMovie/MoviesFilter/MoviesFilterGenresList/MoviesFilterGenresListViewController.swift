@@ -105,8 +105,8 @@ class MoviesFilterGenresListViewController: UIViewController {
             .dropFirst()
             .sink { [weak self] (value) in
                 guard let self = self else { return }
-                let isAscOrder = value.1
-                let selectedSortingType = value.0
+                
+                let (selectedSortingType, isAscOrder) = value
                 
                 if let selectedSortingType = selectedSortingType {
                     let value: MoviesFilterGenresListViewModel.SortingType

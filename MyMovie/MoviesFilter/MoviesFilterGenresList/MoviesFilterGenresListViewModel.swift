@@ -35,9 +35,8 @@ class MoviesFilterGenresListViewModel {
         Publishers.CombineLatest(self.$selectedGenres, self.$sortingType)
             .sink { [weak self] (value) in
                 guard let self = self else { return }
-                let selectedGenres = value.0
-                let filterType = value.1
                 
+                let (selectedGenres, filterType) = value
                 self.items = self.getItems(selectedGenres: selectedGenres, sortingType: filterType)
                 
         }
