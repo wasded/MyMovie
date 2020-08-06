@@ -39,7 +39,7 @@ struct MovieDiscoverRequest: Codable {
     var withoutGenres: String?
     var withKeywords: String?
     var withoutKeywords: String?
-    var withRuntimeLte: Int?
+    var withRuntimeLte: Int? // FIXME: не понятно что это, похоже на продолжительность, но если lte = 0 gte = 60 то сервер возвращает фильмы которые > 60
     var withRuntimeGte: Int?
     var withOriginalLanguage: String?
     

@@ -26,6 +26,7 @@ class MoviesListViewModel {
         dateFormatter.dateFormat = "YYYY-MM-DD"
         return dateFormatter
     }()
+    private var getMoviesRequest: AnyCancellable?
     
     // MARK: - Init
     init(backendController: BackendDiscoverController) {
@@ -55,11 +56,13 @@ class MoviesListViewModel {
                 
                 self.loadMovies(page: page, sortBy: sortType, filterModel: filterModel)
             })
-        .store(in: &self.cancellables)
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Mehtods
     func loadMovies(page: Int, sortBy: MovieSortingType, filterModel: MoviesFilterModel) {
+        self.getMoviesRequest?.cancel()
+        
         var releaseLte: String?
         var releaseGte: String?
         
@@ -86,19 +89,14 @@ class MoviesListViewModel {
                                            withRuntimeLte: filterModel.duration.lte,
                                            withRuntimeGte: filterModel.duration.gte)
         
-        self.backendController.getMovies(model: request)
+        self.getMoviesRequest = self.backendController.getMovies(model: request)
             .sink(receiveCompletion: { (completion) in
-                print()
             }) { (response) in
-                // FIXME: не хорошая проверка, по хорошему надо все остальные запросы останавливать
-                if response.page == self.currentPage {
-                    if response.page == 1 {
-                        self.discoveredMovies = response.results
-                    } else {
-                        self.discoveredMovies.append(contentsOf: response.results)
-                    }
+                if response.page == 1 {
+                    self.discoveredMovies = response.results
+                } else {
+                    self.discoveredMovies.append(contentsOf: response.results)
                 }
         }
-        .store(in: &self.cancellables)
     }
 }
