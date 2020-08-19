@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MovieDiscover: Codable {
+struct MovieDiscoverResponse: Codable {
     let popularity: Double
     let voteCount: Int
     let video: Bool
@@ -73,4 +73,4 @@ struct MovieDiscover: Codable {
     }
 }
 
-extension MovieDiscover: Equatable { }
+extension MovieDiscoverResponse: Equatable { }

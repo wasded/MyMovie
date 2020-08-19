@@ -83,14 +83,25 @@ extension DefaultBackendController: BackendAuthorizationController {
 
 // MARK: - BackendDiscoverController
 extension DefaultBackendController: BackendDiscoverController {    
-    func getMovies(language: String?, region: String?, sortBy: String?, certificationCountry: String?, certification: String?, certificationLte: String?, certificationGte: String?, includeAdult: Bool?, includeVideo: Bool?, page: Int?, primaryReleaseYear: Int?, primaryReleaseDateLte: String?, primaryReleaseDateGte: String?, releaseDateLte: String?, releaseDateGte: String?, withReleaseType: Int?, year: Int?, voteCountLte: Int?, voteCountGte: Int?, voteAverageLte: Double?, voteAverageGte: Double?, withCast: String?, withCrew: String?, withPeople: String?, withCompanies: String?, withGenres: String?, withoutGenres: String?, withKeywords: String?, withoutKeywords: String?, withRuntimeLte: Int?, withRuntimeGte: Int?, withOriginalLanguage: String?) -> AnyPublisher<PagingModel<MovieDiscover>, Error> {
+    func getMovies(language: String?, region: String?, sortBy: String?, certificationCountry: String?, certification: String?, certificationLte: String?, certificationGte: String?, includeAdult: Bool?, includeVideo: Bool?, page: Int?, primaryReleaseYear: Int?, primaryReleaseDateLte: String?, primaryReleaseDateGte: String?, releaseDateLte: String?, releaseDateGte: String?, withReleaseType: Int?, year: Int?, voteCountLte: Int?, voteCountGte: Int?, voteAverageLte: Double?, voteAverageGte: Double?, withCast: String?, withCrew: String?, withPeople: String?, withCompanies: String?, withGenres: String?, withoutGenres: String?, withKeywords: String?, withoutKeywords: String?, withRuntimeLte: Int?, withRuntimeGte: Int?, withOriginalLanguage: String?) -> AnyPublisher<PagingModel<MovieDiscoverResponse>, Error> {
         
         let model = MovieDiscoverRequest(language: language, region: region, sortBy: MovieSortingType(rawValue: sortBy ?? ""), certificationCountry: certificationCountry, certification: certification, certificationLte: certificationLte, certificationGte: certificationGte, includeAdult: includeAdult, includeVideo: includeVideo, page: page, primaryReleaseYear: primaryReleaseYear, primaryReleaseDateLte: primaryReleaseDateLte, primaryReleaseDateGte: primaryReleaseDateGte, releaseDateLte: releaseDateLte, releaseDateGte: releaseDateGte, withReleaseType: withReleaseType, year: year, voteCountLte: voteCountLte, voteCountGte: voteCountGte, voteAverageLte: voteAverageLte, voteAverageGte: voteAverageGte, withCast: withCast, withCrew: withCrew, withPeople: withPeople, withCompanies: withCompanies, withGenres: withGenres, withoutGenres: withoutGenres, withKeywords: withKeywords, withoutKeywords: withoutKeywords, withRuntimeLte: withRuntimeLte, withRuntimeGte: withRuntimeGte, withOriginalLanguage: withOriginalLanguage)
         
         return self.getMovies(model: model)
     }
     
-    func getMovies(model: MovieDiscoverRequest) -> AnyPublisher<PagingModel<MovieDiscover>, Error> {
-        self.performRequest(with: .get, to: "/discover/movie", response: PagingModel<MovieDiscover>.self, queryParameters: model.dictionary, bodyType: .rawData)
+    func getMovies(model: MovieDiscoverRequest) -> AnyPublisher<PagingModel<MovieDiscoverResponse>, Error> {
+        return self.performRequest(with: .get, to: "/discover/movie", response: PagingModel<MovieDiscoverResponse>.self, queryParameters: model.dictionary, bodyType: .rawData)
+    }
+}
+
+// MARK: - BackendMoviesController
+extension DefaultBackendController: BackendMoviesController {
+    func getDetail(movieID: String, language: String, appendToResponse: String?) -> AnyPublisher<MoviesDetailResponse, Error> {
+        var queryParameters = [String: Any]()
+        queryParameters["language"] = language
+        queryParameters["append_to_response"] = appendToResponse
+        
+        return self.performRequest(with: .get, to: "/movie/\(movieID)", response: MoviesDetailResponse.self, queryParameters: queryParameters, bodyType: .rawData)
     }
 }

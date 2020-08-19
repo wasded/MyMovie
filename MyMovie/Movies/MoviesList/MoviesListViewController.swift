@@ -51,7 +51,7 @@ class MoviesListViewController: UIViewController {
     // MARK: - Proprties
     let sortingView = SortingView<SortingType>()
     
-    var items: [MovieDiscover] = [] {
+    var items: [MovieDiscoverResponse] = [] {
         didSet {
             // FIMXE: Сделать диффы
             if self.items != oldValue {

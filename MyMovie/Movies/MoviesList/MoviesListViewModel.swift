@@ -14,7 +14,7 @@ class MoviesListViewModel {
     // MARK: - Properties
     @Injected var backendController: BackendDiscoverController
     
-    @Published var discoveredMovies: [MovieDiscover] = []
+    @Published var discoveredMovies: [MovieDiscoverResponse] = []
     @Published var sortType: MovieSortingType = .popularityDesc
     @Published var currentPage: Int = 1
     @Published var filterModel = MoviesFilterModel()

@@ -13,10 +13,24 @@ class MovieDetailViewController: UIViewController {
     // MARK: - Outelts
     
     // MARK: - Proprties
+    var viewModel: MovieDetailViewModel!
     
-    // MARK: - Init
+    static func instantiate(viewModel: MovieDetailViewModel) -> MovieDetailViewController {
+        let viewController = UIStoryboard.moviesListStoryboard.instantiateViewController(withIdentifier: String(describing: MovieDetailViewController.self)) as! MovieDetailViewController
+        viewController.viewModel = viewModel
+        return viewController
+    }
+    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.configureInteface()
+    }
     
     // MARK: - Methods
+    private func configureInteface() {
+        
+    }
     
     // MARK: - Actions
 }

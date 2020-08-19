@@ -7,7 +7,16 @@
 //
 
 import Foundation
+import Combine
+import Resolver
 
 class MovieDetailViewModel {
+    // MARK: - Proprties
     
+    // MARK: - Init
+    init() {
+        
+    }
+    
+    // MARK: - Methods
 }

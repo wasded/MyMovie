@@ -32,6 +32,7 @@ protocol SessionManager: class {
     
     func start()
     
+    /// Авторизация здесь очень "натянутая", это всего лишь создание sessionID, чтобы можно было авторизовываться с помощью логина и пароля необходимо писать на сайт чтобы они разрешили это юзать
     func authorize() -> AnyPublisher<CreateSessionResponse, Error>
     func logout() -> AnyPublisher<DeleteSessionResponse, Error>
     
