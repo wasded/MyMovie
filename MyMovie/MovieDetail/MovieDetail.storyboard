@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -14,13 +14,40 @@
                     <view key="view" contentMode="scaleToFill" id="09s-UN-GAd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Wr8-oF-O8s">
+                                <rect key="frame" x="0.0" y="375" width="414" height="487"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lvb-Ja-AeS" customClass="MovieDetailHeaderView" customModule="MyMovie" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="375"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="375" id="3VU-Ta-rvX"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="JUD-mr-kSs" firstAttribute="bottom" secondItem="Wr8-oF-O8s" secondAttribute="bottom" id="5Lq-KH-oX1"/>
+                            <constraint firstItem="Lvb-Ja-AeS" firstAttribute="leading" secondItem="JUD-mr-kSs" secondAttribute="leading" id="8BX-jC-hQW"/>
+                            <constraint firstItem="JUD-mr-kSs" firstAttribute="trailing" secondItem="Wr8-oF-O8s" secondAttribute="trailing" id="8bw-kJ-CTU"/>
+                            <constraint firstItem="Wr8-oF-O8s" firstAttribute="top" secondItem="Lvb-Ja-AeS" secondAttribute="bottom" id="Ehy-Cv-1Ow"/>
+                            <constraint firstItem="JUD-mr-kSs" firstAttribute="trailing" secondItem="Lvb-Ja-AeS" secondAttribute="trailing" id="NrX-cI-v16"/>
+                            <constraint firstItem="Wr8-oF-O8s" firstAttribute="leading" secondItem="JUD-mr-kSs" secondAttribute="leading" id="nPY-cr-SH1"/>
+                            <constraint firstItem="Lvb-Ja-AeS" firstAttribute="top" secondItem="09s-UN-GAd" secondAttribute="top" id="tLW-lo-iQq"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="JUD-mr-kSs"/>
                     </view>
+                    <connections>
+                        <outlet property="header" destination="Lvb-Ja-AeS" id="yNz-JB-oeA"/>
+                        <outlet property="headerHeightContraint" destination="3VU-Ta-rvX" id="0dO-ID-hQH"/>
+                        <outlet property="tableView" destination="Wr8-oF-O8s" id="ijW-Lf-15u"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aPr-pN-1hr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="25" y="92"/>
+            <point key="canvasLocation" x="24.637681159420293" y="91.741071428571431"/>
         </scene>
     </scenes>
 </document>

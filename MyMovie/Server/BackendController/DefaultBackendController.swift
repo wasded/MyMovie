@@ -37,12 +37,12 @@ class DefaultBackendController {
         }
         
         if needApiToken {
-            queryParameters["api_key"] = APIConstants.apiKey
+            queryParameters["api_key"] = APIHelper.apiKey
         }
         
         let additionalHeaders = self.generateHeader()
         
-        return self.networkWorker.performDataTaskWithMapping(with: method, to: APIConstants.baseURL, resource: resource, response: type, queryParameters: queryParameters, bodyParameters: bodyParameters, additionalHeaders: additionalHeaders, rawData: encodedData, bodyType: bodyType)
+        return self.networkWorker.performDataTaskWithMapping(with: method, to: APIHelper.baseURL, resource: resource, response: type, queryParameters: queryParameters, bodyParameters: bodyParameters, additionalHeaders: additionalHeaders, rawData: encodedData, bodyType: bodyType)
         .eraseToAnyPublisher()
     }
     
@@ -50,12 +50,12 @@ class DefaultBackendController {
         var queryParameters = queryParameters ?? [String: Any]()
         
         if needApiToken {
-            queryParameters["api_key"] = APIConstants.apiKey
+            queryParameters["api_key"] = APIHelper.apiKey
         }
         
         let additionalHeaders = self.generateHeader()
         
-        return self.networkWorker.performDataTaskWithMapping(with: method, to: APIConstants.baseURL, resource: resource, response: type, queryParameters: queryParameters, bodyParameters: bodyParameters, additionalHeaders: additionalHeaders, rawData: rawData, bodyType: bodyType)
+        return self.networkWorker.performDataTaskWithMapping(with: method, to: APIHelper.baseURL, resource: resource, response: type, queryParameters: queryParameters, bodyParameters: bodyParameters, additionalHeaders: additionalHeaders, rawData: rawData, bodyType: bodyType)
             
     }
     
@@ -97,11 +97,11 @@ extension DefaultBackendController: BackendDiscoverController {
 
 // MARK: - BackendMoviesController
 extension DefaultBackendController: BackendMoviesController {
-    func getDetail(movieID: Int, language: String, appendToResponse: String?) -> AnyPublisher<MoviesDetailResponse, Error> {
+    func getDetail(movieID: Int, language: String, appendToResponse: String?) -> AnyPublisher<MovieDetailResponse, Error> {
         var queryParameters = [String: Any]()
         queryParameters["language"] = language
         queryParameters["append_to_response"] = appendToResponse
         
-        return self.performRequest(with: .get, to: "/movie/\(movieID)", response: MoviesDetailResponse.self, queryParameters: queryParameters, bodyType: .rawData)
+        return self.performRequest(with: .get, to: "/movie/\(movieID)", response: MovieDetailResponse.self, queryParameters: queryParameters, bodyType: .rawData)
     }
 }

@@ -18,7 +18,9 @@ public enum HTTPError: LocalizedError, Error, Identifiable {
     case encodeFailed
 }
 
-public struct APIConstants {
+// FIXME: Должна быть зависимостью
+
+public struct APIHelper {
     enum PosterType {
         case original
         case custom(Int)
@@ -45,5 +47,9 @@ public struct APIConstants {
         jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
         return jsonDecoder
     }()
+    
+    static func getPosterURL(posterType: APIHelper.PosterType, posterPath: String) -> URL? {
+        return URL(string: String(format: "%@/%@/%@", APIHelper.urlOriginalPoster, posterType.getURLParameter(), posterPath))
+    }
 }
     

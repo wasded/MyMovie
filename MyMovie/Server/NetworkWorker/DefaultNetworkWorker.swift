@@ -94,7 +94,7 @@ class DefaultNetworkWorker: NetworkWorker {
             .flatMap { (data, response) -> AnyPublisher<Data, Error> in
                 return self.convertResponseErrorToSupportedTypes(data: data, response: response)
         }
-        .decode(type: T.self, decoder: APIConstants.jsonDecoder)
+        .decode(type: T.self, decoder: APIHelper.jsonDecoder)
         .receive(on: RunLoop.main)
         .eraseToAnyPublisher()
     }
@@ -205,7 +205,7 @@ class DefaultNetworkWorker: NetworkWorker {
         guard 200...299 ~= httpResponse.statusCode else {
             
             for type in self.supportedErrorTypes {
-                if let error = try? type.decode(decoder: APIConstants.jsonDecoder, data: data) {
+                if let error = try? type.decode(decoder: APIHelper.jsonDecoder, data: data) {
                     let resultError = ResponseError.CodableNetworkError(error)
                     return Fail(error: resultError).eraseToAnyPublisher()
                 }

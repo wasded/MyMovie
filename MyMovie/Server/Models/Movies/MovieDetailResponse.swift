@@ -8,12 +8,12 @@
 
 import Foundation
 
-struct MoviesDetailResponse: Codable {
+struct MovieDetailResponse: Codable {
     let adult: Bool
     let backdropPath: String?
     // FIXME: Этот тип приходит как object
     //let belongsToCollection: Any
-    let budget: Int
+    let budget: Int?
     let genres: [MovieGenre]
     let homepage: String?
     let id: Int
@@ -25,7 +25,7 @@ struct MoviesDetailResponse: Codable {
     let posterPath: String?
     let productionCompanies: [ProductionCompany]
     let productionCountries: [ProductionCountry]
-    let releaseDate: String
+    let releaseDate: Date
     let revenue: Int
     let runtime: Int?
     let spokenLanguages: [SpokenLanguage]
@@ -63,9 +63,55 @@ struct MoviesDetailResponse: Codable {
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
     }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        self.adult = try container.decode(Bool.self, forKey: .adult)
+        self.backdropPath = try container.decode(String?.self, forKey: .backdropPath)
+        self.budget = try container.decode(Int?.self, forKey: .budget)
+        
+        self.genres = (try container.decode([MovieDetailGenre].self, forKey: .genres)).map({ $0.movieGenre })
+
+        self.homepage = try container.decode(String?.self, forKey: .homepage)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.imdbID = try container.decode(String?.self, forKey: .imdbID)
+        self.originalLanguage = try container.decode(String.self, forKey: .originalLanguage)
+        self.originalTitle = try container.decode(String.self, forKey: .originalTitle)
+        self.overview = try container.decode(String?.self, forKey: .overview)
+        self.popularity = try container.decode(Double.self, forKey: .popularity)
+        self.posterPath = try container.decode(String?.self, forKey: .posterPath)
+        self.productionCompanies = try container.decode([ProductionCompany].self, forKey: .productionCompanies)
+        self.productionCountries = try container.decode([ProductionCountry].self, forKey: .productionCountries)
+    
+        let releaseDate = try container.decode(String.self, forKey: .releaseDate)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-DD"
+        
+        self.releaseDate = dateFormatter.date(from: releaseDate) ?? Date()
+        
+        self.revenue = try container.decode(Int.self, forKey: .revenue)
+        self.runtime = try container.decode(Int?.self, forKey: .runtime)
+        self.spokenLanguages = try container.decode([SpokenLanguage].self, forKey: .spokenLanguages)
+        self.status = try container.decode(String.self, forKey: .status)
+        self.tagline = try container.decode(String.self, forKey: .tagline)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.video = try container.decode(Bool.self, forKey: .video)
+        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        self.voteCount = try container.decode(Int.self, forKey: .voteCount)
+    }
 }
 
 // MARK: - ProductionCompany
+struct MovieDetailGenre: Codable {
+    let id: Int
+    let name: String
+    
+    var movieGenre: MovieGenre {
+        return MovieGenre(rawValue: self.id) ?? .action
+    }
+}
+
 struct ProductionCompany: Codable {
     let id: Int
     let logoPath: String?

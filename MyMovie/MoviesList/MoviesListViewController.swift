@@ -80,6 +80,13 @@ class MoviesListViewController: UIViewController {
         self.viewModel.start()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = nil
+        self.navigationController?.view.backgroundColor = nil
+    }
+    
     // MARK: - Actions
     @objc func filterButtonDidTap(_ sender: UIBarButtonItem) {
         self.delegate?.openFilterDidTap(self, filterModel: self.viewModel.filterModel)
@@ -126,8 +133,9 @@ class MoviesListViewController: UIViewController {
     
     private func configureInterface() {
         // navigationBar
-        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Фильмы"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationItem.largeTitleDisplayMode = .always
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "profileTabBar"), style: .plain, target: self, action: #selector(self.filterButtonDidTap(_:)))
 
         // sortingView
@@ -167,7 +175,15 @@ extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         let data = self.items[indexPath.row]
-        cell.data = MovieTableViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title, releaseDate: data.releaseDate, genres: data.genreIDS.map({ $0.name }), voteAverage: data.voteAverage, description: data.overview)
+        
+        let urlPoster: URL?
+        if let posterPath = data.posterPath {
+            urlPoster = APIHelper.getPosterURL(posterType: .custom(200), posterPath: posterPath)
+        } else {
+            urlPoster = nil
+        }
+        
+        cell.data = MovieTableViewData(urlPoster: urlPoster, titleLabel: data.title, releaseDate: data.releaseDate, genres: data.genreIDS.map({ $0.name }), voteAverage: data.voteAverage, description: data.overview)
         return cell
     }
     

@@ -63,14 +63,6 @@ struct MovieDiscoverResponse: Codable {
         
         self.releaseDate = dateFormatter.date(from: releaseDate) ?? Date()
     }
-    
-    func getPosterURL(posterType: APIConstants.PosterType) -> URL? {
-        if let posterPath = self.posterPath {
-            return URL(string: String(format: "%@/%@/%@", APIConstants.urlOriginalPoster, posterType.getURLParameter(), posterPath))
-        } else {
-            return nil
-        }
-    }
 }
 
 extension MovieDiscoverResponse: Equatable { }

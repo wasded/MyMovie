@@ -12,17 +12,20 @@ import Combine
 
 class MovieDetailViewController: UIViewController {
     // MARK: - Outelts
-    @IBOutlet weak var posterImageView: UIImageView!
-    @IBOutlet weak var titleMovieLabel: UILabel!
-    @IBOutlet weak var descriptionMovieLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var headerHeightContraint: NSLayoutConstraint!
+    @IBOutlet weak var header: MovieDetailHeaderView!
+    
+    private let headerMaximumHeight: CGFloat = 375.0
+    private let headerMinimumHeight: CGFloat = 200.0
     
     // MARK: - Proprties
     var movieID: Int!
     var viewModel: MovieDetailViewModel!
-    var movieDetail: MoviesDetailResponse? {
+    var movieDetailModel: MovieDetailModel? {
         didSet {
-            if let movieDetail = self.movieDetail {
-                self.movieDetailDidChanged(movieDetail)
+            if let movieDetail = self.movieDetailModel {
+                self.movieDetailModelDidChanged(movieDetail)
             }
         }
     }
@@ -41,34 +44,101 @@ class MovieDetailViewController: UIViewController {
         super.viewDidLoad()
         self.configureInteface()
         self.bindingToProperties()
+        self.viewModel.getMovieDetail(movieID: self.movieID)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.view.backgroundColor = UIColor.clear
+        
+        self.navigationItem.largeTitleDisplayMode = .never
     }
     
     // MARK: - Methods
     private func bindingToProperties() {
-        self.viewModel.getMovieDetail(movieID: self.movieID)
-            .sink(receiveCompletion: { (completion) in
-                switch completion {
-                case .finished: break
-                case .failure(let error):
-                    self.handleError(error)
-                }
-            }) { (response) in
-                self.movieDetail = response
+        self.viewModel.$movieDetailModel
+            .sink(receiveCompletion: { (_) in
+            }) { (model) in
+                self.movieDetailModel = model
         }
         .store(in: &self.cancellables)
     }
     
     private func configureInteface() {
+        // self
+        self.headerHeightContraint.constant = self.headerMaximumHeight
         
+        // tableView
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        self.header.data = MovieDetailHeaderData(posterURL: nil, title: "Название фильма", info: "Самая длинная информация о фильме в две строки")
     }
     
-    private func movieDetailDidChanged(_ movieDetail: MoviesDetailResponse) {
-        
+    private func movieDetailModelDidChanged(_ movieDetailModel: MovieDetailModel) {
+        self.header.data = movieDetailModel.headerData
     }
 
     private func handleError(_ error: Error) {
         
     }
     
+    private func setMaximumHeaderSize() {
+        UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseInOut, animations: {
+            self.headerHeightContraint.constant = self.headerMaximumHeight
+            self.view.layoutIfNeeded()
+        })
+    }
+    
     // MARK: - Actions
+}
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 100
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        return cell
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.changeHeaderSize(scrollView: scrollView)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if self.headerHeightContraint.constant > self.headerMaximumHeight {
+            self.setMaximumHeaderSize()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if self.headerHeightContraint.constant > self.headerMaximumHeight {
+            self.setMaximumHeaderSize()
+        }
+    }
+    
+    func changeHeaderSize(scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            let devider: CGFloat
+            if self.headerHeightContraint.constant > self.headerMaximumHeight {
+                devider = 4
+            } else {
+                devider = 1
+            }
+            self.headerHeightContraint.constant += abs(scrollView.contentOffset.y/devider)
+            scrollView.contentOffset.y = 0
+        } else if scrollView.contentOffset.y > 0, self.headerHeightContraint.constant > self.headerMinimumHeight {
+            self.headerHeightContraint.constant -= abs(scrollView.contentOffset.y)
+            scrollView.contentOffset.y = 0
+        }
+        
+        if self.headerHeightContraint.constant < self.headerMinimumHeight {
+            self.headerHeightContraint.constant = self.headerMinimumHeight
+        }
+    }
 }
