@@ -50,6 +50,8 @@
 		49E575FE24D1938C00E200EA /* MoviesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575FD24D1938C00E200EA /* MoviesListViewModel.swift */; };
 		49E5760024D194D400E200EA /* BackendDiscoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E575FF24D194D400E200EA /* BackendDiscoverController.swift */; };
 		55CCFF5F2CF3062968E2B4F9 /* Pods_MyMovieTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CF736D7F8A0ED0A1C89C431 /* Pods_MyMovieTests.framework */; };
+		7201916124FE956A00CD03C0 /* UIImage+Additionals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7201916024FE956A00CD03C0 /* UIImage+Additionals.swift */; };
+		7201916324FE95C800CD03C0 /* UIColor+Additionals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7201916224FE95C800CD03C0 /* UIColor+Additionals.swift */; };
 		7201F6BC24D80A0500215340 /* MoviesFilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7201F6BB24D80A0500215340 /* MoviesFilterModel.swift */; };
 		7201F6BE24D81B6100215340 /* MoviesFilterListKeyboardToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7201F6BD24D81B6100215340 /* MoviesFilterListKeyboardToolBar.swift */; };
 		721D354324D9610200DF7856 /* MoviesFilterGenresListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 721D354224D9610200DF7856 /* MoviesFilterGenresListViewController.swift */; };
@@ -139,6 +141,8 @@
 		49E575FB24D15F7E00E200EA /* MovieTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
 		49E575FD24D1938C00E200EA /* MoviesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListViewModel.swift; sourceTree = "<group>"; };
 		49E575FF24D194D400E200EA /* BackendDiscoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendDiscoverController.swift; sourceTree = "<group>"; };
+		7201916024FE956A00CD03C0 /* UIImage+Additionals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Additionals.swift"; sourceTree = "<group>"; };
+		7201916224FE95C800CD03C0 /* UIColor+Additionals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Additionals.swift"; sourceTree = "<group>"; };
 		7201F6BB24D80A0500215340 /* MoviesFilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterModel.swift; sourceTree = "<group>"; };
 		7201F6BD24D81B6100215340 /* MoviesFilterListKeyboardToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterListKeyboardToolBar.swift; sourceTree = "<group>"; };
 		721D354224D9610200DF7856 /* MoviesFilterGenresListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFilterGenresListViewController.swift; sourceTree = "<group>"; };
@@ -397,6 +401,8 @@
 			children = (
 				49E575E524D053BD00E200EA /* UIStoryboard+Name.swift */,
 				490D696624D1B35E0061A472 /* Encodable+Additionals.swift */,
+				7201916024FE956A00CD03C0 /* UIImage+Additionals.swift */,
+				7201916224FE95C800CD03C0 /* UIColor+Additionals.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -741,6 +747,7 @@
 				49E575F624D06C8B00E200EA /* BubbleSegment.swift in Sources */,
 				49E575BC24D00F8600E200EA /* APIHelper.swift in Sources */,
 				490D696724D1B35E0061A472 /* Encodable+Additionals.swift in Sources */,
+				7201916124FE956A00CD03C0 /* UIImage+Additionals.swift in Sources */,
 				490D696024D1A1480061A472 /* MovieDiscoverResponse.swift in Sources */,
 				49E575FA24D14C5A00E200EA /* MovieSortingType.swift in Sources */,
 				7201F6BC24D80A0500215340 /* MoviesFilterModel.swift in Sources */,
@@ -763,6 +770,7 @@
 				49E575ED24D0582800E200EA /* MoviesListCoordinator.swift in Sources */,
 				49E575D024D0255500E200EA /* DefaultSessionManager.swift in Sources */,
 				49E575DB24D04C3E00E200EA /* NavigationCoordinator.swift in Sources */,
+				7201916324FE95C800CD03C0 /* UIColor+Additionals.swift in Sources */,
 				49E575C024D018E500E200EA /* DefaultBackendController.swift in Sources */,
 				49E575CE24D024ED00E200EA /* DeleteSessionResponse.swift in Sources */,
 				49E575D824D04C3E00E200EA /* TabBarCoordinator.swift in Sources */,

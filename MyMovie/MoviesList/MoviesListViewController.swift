@@ -80,13 +80,6 @@ class MoviesListViewController: UIViewController {
         self.viewModel.start()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = nil
-        self.navigationController?.view.backgroundColor = nil
-    }
-    
     // MARK: - Actions
     @objc func filterButtonDidTap(_ sender: UIBarButtonItem) {
         self.delegate?.openFilterDidTap(self, filterModel: self.viewModel.filterModel)
@@ -190,5 +183,6 @@ extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = self.items[indexPath.row]
         self.delegate?.openMovieDidTap(self, movieID: movie.id)
+        self.tableView.deselectRow(at: indexPath, animated: true)
     }
 }

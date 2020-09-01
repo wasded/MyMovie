@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SDWebImage
 
 struct MovieDetailHeaderData {
     var posterURL: URL?
@@ -45,15 +46,13 @@ class MovieDetailHeaderView: UIView {
     
     // MARK: - Methods
     private func configureInterface() {
-        self.backgroundColor = .red
-        
         self.addSubview(self.posterImageView)
         self.posterImageView.translatesAutoresizingMaskIntoConstraints = false
         self.posterImageView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         self.posterImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         self.posterImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         self.posterImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        self.posterImageView.contentMode = .scaleAspectFill
+        self.posterImageView.contentMode = .top
         self.posterImageView.clipsToBounds = true
         
         self.addSubview(self.infoLabel)
@@ -76,10 +75,17 @@ class MovieDetailHeaderView: UIView {
     
     private func updateInterface() {
         guard let data = self.data else { return }
+        
         self.titleLabel.text = data.title
         self.infoLabel.text = data.info
+        
         if let posterURL = data.posterURL {
-            self.posterImageView.sd_setImage(with: posterURL, completed: nil)
+            SDWebImageManager.shared.loadImage(with: posterURL, progress: nil) { [weak self] (image, _, _, _, _, _) in
+                guard let self = self else { return }
+                if let image = image {
+                    self.posterImageView.image = image.aspectFitImage(inRect: CGRect(origin: .zero, size: CGSize(width: self.posterImageView.frame.width, height: .greatestFiniteMagnitude)))
+                }
+            }
         }
     }
     

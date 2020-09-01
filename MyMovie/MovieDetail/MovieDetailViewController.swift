@@ -20,6 +20,7 @@ class MovieDetailViewController: UIViewController {
     private let headerMinimumHeight: CGFloat = 200.0
     
     // MARK: - Proprties
+    
     var movieID: Int!
     var viewModel: MovieDetailViewModel!
     var movieDetailModel: MovieDetailModel? {
@@ -47,11 +48,26 @@ class MovieDetailViewController: UIViewController {
         self.viewModel.getMovieDetail(movieID: self.movieID)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.navigationBar.tintColor = .white
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = nil
+        self.navigationController?.view.backgroundColor = nil
+        self.navigationController?.navigationBar.tintColor = nil
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.view.backgroundColor = UIColor.clear
+        self.navigationController?.navigationBar.tintColor = .white
         
         self.navigationItem.largeTitleDisplayMode = .never
     }
