@@ -32,14 +32,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Resolving {
     }
 
     func registerDependencies() {
-        resolver.register { DefaultNetworkWorker() as NetworkWorker}.scope(Resolver.application)
-        resolver.register { DefaultCredentialStorage() as CredentialStorage}.scope(Resolver.application)
+        self.resolver.register { DefaultNetworkWorker() as NetworkWorker}.scope(Resolver.application)
+        self.resolver.register { DefaultCredentialStorage() as CredentialStorage}.scope(Resolver.application)
         
         let defaultBackendController = DefaultBackendController(networkWorker: Resolver.resolve(), credentialStorage: Resolver.resolve())
-        resolver.register { defaultBackendController as BackendAuthorizationController}.scope(Resolver.application)
-        resolver.register { defaultBackendController as BackendDiscoverController}.scope(Resolver.application)
+        self.resolver.register { defaultBackendController as BackendAuthorizationController}.scope(Resolver.application)
+        self.resolver.register { defaultBackendController as BackendDiscoverController}.scope(Resolver.application)
+        self.resolver.register { defaultBackendController as BackendMoviesController}.scope(Resolver.application)
         
-        resolver.register { DefaultSessionManager(backendController: self.resolver.resolve(), credentialStorage: self.resolver.resolve()) as SessionManager}.scope(Resolver.application)
+        self.resolver.register { DefaultSessionManager(backendController: self.resolver.resolve(), credentialStorage: self.resolver.resolve()) as SessionManager}.scope(Resolver.application)
     }
 }
 

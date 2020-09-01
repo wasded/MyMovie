@@ -13,6 +13,7 @@ import Combine
 
 protocol MoviesListViewControllerDelegate: class {
     func openFilterDidTap(_ sender: MoviesListViewController, filterModel: MoviesFilterModel)
+    func openMovieDidTap(_ sender: MoviesListViewController, movieID: Int)
 }
 
 class MoviesListViewController: UIViewController {
@@ -168,5 +169,10 @@ extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
         let data = self.items[indexPath.row]
         cell.data = MovieTableViewData(urlPoster: data.getPosterURL(posterType: .custom(200)), titleLabel: data.title, releaseDate: data.releaseDate, genres: data.genreIDS.map({ $0.name }), voteAverage: data.voteAverage, description: data.overview)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = self.items[indexPath.row]
+        self.delegate?.openMovieDidTap(self, movieID: movie.id)
     }
 }

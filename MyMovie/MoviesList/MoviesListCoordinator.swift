@@ -61,4 +61,9 @@ extension MoviesListCoordinator: MoviesListViewControllerDelegate {
         self.startChild(coordinator: coordinator)
         self.present(viewController)
     }
+    
+    func openMovieDidTap(_ sender: MoviesListViewController, movieID: Int) {
+        let viewController = MovieDetailViewController.instantiate(viewModel: MovieDetailViewModel(backendController: Resolver.resolve()), movieID: movieID)
+        self.show(viewController)
+    }
 }

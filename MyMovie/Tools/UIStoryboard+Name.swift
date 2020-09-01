@@ -17,4 +17,8 @@ extension UIStoryboard {
     static var moviesFilterStoryboard: UIStoryboard {
         return UIStoryboard(name: "MoviesFilter", bundle: Bundle.main)
     }
+    
+    static var movieDetailStoryboard: UIStoryboard {
+        return UIStoryboard(name: "MovieDetail", bundle: Bundle.main)
+    }
 }
