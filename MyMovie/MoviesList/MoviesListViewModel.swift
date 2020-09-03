@@ -45,7 +45,7 @@ class MoviesListViewModel {
                 
                 var (page, sortType, filterModel) = value
                 
-                if self.sortType != sortType || self.currentPage != page {
+                if self.sortType != sortType || self.filterModel != filterModel {
                     self.currentPage = 1
                     page = 1
                 }
@@ -87,6 +87,7 @@ class MoviesListViewModel {
         
         self.getMoviesRequest = self.backendController.getMovies(model: request)
             .sink(receiveCompletion: { (completion) in
+                print()
             }) { (response) in
                 if response.page == 1 {
                     self.discoveredMovies = response.results

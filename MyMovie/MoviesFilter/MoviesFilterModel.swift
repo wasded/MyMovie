@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum MoviesFilterVoteAverage {
+enum MoviesFilterVoteAverage: Equatable {
     case any
     case value(Int)
     
@@ -22,7 +22,7 @@ enum MoviesFilterVoteAverage {
     }
 }
 
-enum MoviesFilterVoteCount: CaseIterable {
+enum MoviesFilterVoteCount: CaseIterable, Equatable {
     case any
     case few
     case medium
@@ -68,7 +68,7 @@ enum MoviesFilterVoteCount: CaseIterable {
     }
 }
 
-enum MoviesFilterReleaseDate {
+enum MoviesFilterReleaseDate: Equatable {
     case any
     case value(Date)
     
@@ -128,7 +128,7 @@ enum MoviesFilterDuration: CaseIterable {
     }
 }
 
-struct MoviesFilterModel {
+struct MoviesFilterModel: Equatable {
     var isAdult: Bool = false
     var voteAverageLte: MoviesFilterVoteAverage = .any
     var voteAverageGte: MoviesFilterVoteAverage = .any
