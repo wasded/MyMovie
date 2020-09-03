@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Combine
+import SkeletonView
 
 class MovieDetailViewController: UIViewController {
     // MARK: - Outelts
@@ -31,10 +32,9 @@ class MovieDetailViewController: UIViewController {
     private let headerMinimumHeight: CGFloat = 200.0
     private var cancellables: Set<AnyCancellable> = []
     
-    static func instantiate(viewModel: MovieDetailViewModel, movieID: Int) -> MovieDetailViewController {
+    static func instantiate(viewModel: MovieDetailViewModel) -> MovieDetailViewController {
         let viewController = UIStoryboard.movieDetailStoryboard.instantiateViewController(withIdentifier: String(describing: MovieDetailViewController.self)) as! MovieDetailViewController
         viewController.viewModel = viewModel
-        viewController.movieID = movieID
         return viewController
     }
     
@@ -42,8 +42,9 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureInteface()
+        self.registerCells()
         self.bindingToProperties()
-        self.viewModel.getMovieDetail(movieID: self.movieID)
+        self.viewModel.start()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +80,10 @@ class MovieDetailViewController: UIViewController {
         .store(in: &self.cancellables)
     }
     
+    private func registerCells() {
+        self.tableView.register(MovieDetailActionsCell.self, forCellReuseIdentifier: String(describing: MovieDetailActionsCell.self))
+    }
+    
     private func configureInteface() {
         // self
         self.headerHeightContraint.constant = self.headerMaximumHeight
@@ -86,12 +91,15 @@ class MovieDetailViewController: UIViewController {
         // tableView
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
-        self.header.data = MovieDetailHeaderData(posterURL: nil, title: "Название фильма", info: "Самая длинная информация о фильме в две строки")
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.estimatedRowHeight = 44
+        self.tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
+        self.tableView.tableFooterView = UIView()
     }
     
     private func movieDetailModelDidChanged(_ movieDetailModel: MovieDetailModel) {
         self.header.data = movieDetailModel.headerData
+        self.tableView.reloadData()
     }
 
     private func handleError(_ error: Error) {
@@ -106,17 +114,48 @@ class MovieDetailViewController: UIViewController {
     }
     
     // MARK: - Actions
+    @objc func favoriteButtonDidTap() {
+    }
+    
+    @objc func watchLaterButtonDidTap() {
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
-extension MovieDetailViewController: UITableViewDelegate, UITableViewDataSource {
+extension MovieDetailViewController: SkeletonTableViewDelegate, SkeletonTableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.movieDetailModel?.sections.count ?? 0
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        return self.movieDetailModel?.sections[section].items.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        return cell
+        guard let data = self.movieDetailModel?.sections[indexPath.section].items[indexPath.row] else { return UITableViewCell() }
+        
+        if let data = data as? MovieDetailActionsCellData {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieDetailActionsCell.self), for: indexPath) as! MovieDetailActionsCell
+            cell.watchLaterView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.watchLaterButtonDidTap)))
+            cell.favoriteView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.favoriteButtonDidTap)))
+            cell.selectionStyle = data.isSelectable ? .default : .none
+            cell.data = data
+            return cell
+        } else {
+            return UITableViewCell()
+        }
+    }
+    
+    func numSections(in collectionSkeletonView: UITableView) -> Int {
+        return 0
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 0
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return "asdsad"
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -12,6 +12,12 @@ import Resolver
 
 struct MovieDetailModel {
     var headerData: MovieDetailHeaderData
+    var sections: [MovieDetailSection]
+    
+    init(headerData: MovieDetailHeaderData, sections: [MovieDetailSection] = []) {
+        self.headerData = headerData
+        self.sections = sections
+    }
 }
 
 class MovieDetailViewModel {
@@ -20,6 +26,7 @@ class MovieDetailViewModel {
     
     @Published var movieDetailModel: MovieDetailModel?
     
+    let movieID: Int
     private var cancellables: Set<AnyCancellable> = []
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
@@ -28,13 +35,13 @@ class MovieDetailViewModel {
     }
     
     // MARK: - Init
-    init(backendController: BackendMoviesController) {
-        self.backendController = backendController
+    init(movieID: Int) {
+        self.movieID = movieID
     }
     
     // MARK: - Methods
-    func getMovieDetail(movieID: Int) {
-        self.backendController.getDetail(movieID: movieID, language: Locale.current.languageCode ?? "ru_RU", appendToResponse: nil)
+    func start() {
+        self.backendController.getDetail(movieID: self.movieID, language: Locale.current.languageCode ?? "ru_RU", appendToResponse: nil)
             .sink(receiveCompletion: { (completion) in
             }) { (response) in
                 self.movieDetailModel = self.generateMovieDetailModel(from: response)
@@ -60,6 +67,7 @@ class MovieDetailViewModel {
         
         return MovieDetailModel(headerData: MovieDetailHeaderData(posterURL: urlPoster,
                                                                   title: movieDetailResponse.title,
-                                                                  info: info))
+                                                                  info: info),
+                                sections: self.getData(model: movieDetailResponse))
     }
 }
