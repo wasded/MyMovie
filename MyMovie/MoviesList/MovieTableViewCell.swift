@@ -92,7 +92,6 @@ class MovieTableViewCell: UITableViewCell {
         self.titleLabel.leadingAnchor.constraint(equalTo: self.posterView.trailingAnchor, constant: 8).isActive = true
         self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: 0).isActive = true
         self.titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        self.titleLabel.textColor = .black
         self.titleLabel.textAlignment = .left
         self.titleLabel.lineBreakMode = .byTruncatingTail
         self.titleLabel.numberOfLines = 1
@@ -153,7 +152,8 @@ class MovieTableViewCell: UITableViewCell {
         self.voteAverageView.rating = data.voteAverage / 2
         
         self.posterView.showAnimatedGradientSkeleton()
-        self.posterView.sd_setImage(with: data.urlPoster, placeholderImage: nil) { [weak self] (_, error, _, _) in
+        
+        self.posterView.sd_setImage(with: data.urlPoster, placeholderImage: nil, options: .waitStoreCache) { [weak self] (_, error, _, _) in
             guard let self = self else { return }
             self.posterView.hideSkeleton()
             if let _ = error {

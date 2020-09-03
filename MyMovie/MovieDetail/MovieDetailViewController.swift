@@ -16,11 +16,7 @@ class MovieDetailViewController: UIViewController {
     @IBOutlet weak var headerHeightContraint: NSLayoutConstraint!
     @IBOutlet weak var header: MovieDetailHeaderView!
     
-    private let headerMaximumHeight: CGFloat = 375.0
-    private let headerMinimumHeight: CGFloat = 200.0
-    
     // MARK: - Proprties
-    
     var movieID: Int!
     var viewModel: MovieDetailViewModel!
     var movieDetailModel: MovieDetailModel? {
@@ -31,6 +27,8 @@ class MovieDetailViewController: UIViewController {
         }
     }
     
+    private let headerMaximumHeight: CGFloat = 375.0
+    private let headerMinimumHeight: CGFloat = 200.0
     private var cancellables: Set<AnyCancellable> = []
     
     static func instantiate(viewModel: MovieDetailViewModel, movieID: Int) -> MovieDetailViewController {
@@ -50,7 +48,7 @@ class MovieDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.tintColor = .navigationBarBackButtonColor
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -67,7 +65,6 @@ class MovieDetailViewController: UIViewController {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.tintColor = .white
         
         self.navigationItem.largeTitleDisplayMode = .never
     }

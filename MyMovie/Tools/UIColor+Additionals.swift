@@ -25,3 +25,13 @@ extension UIColor {
         return (brightness > threshold)
     }
 }
+
+extension UIColor {
+    open class var posterOverlayColor: UIColor {
+        return UIColor(named: "posterOverlayColor")!
+    }
+    
+    open class var navigationBarBackButtonColor: UIColor {
+        return UIColor(named: "navigationBarBackButtonColor")!
+    }
+}

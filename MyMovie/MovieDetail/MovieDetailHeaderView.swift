@@ -25,6 +25,7 @@ class MovieDetailHeaderView: UIView {
     }
     
     let posterImageView = UIImageView()
+    let overlayImageView = UIView()
     let titleLabel = UILabel()
     let infoLabel = UILabel()
     
@@ -55,13 +56,21 @@ class MovieDetailHeaderView: UIView {
         self.posterImageView.contentMode = .top
         self.posterImageView.clipsToBounds = true
         
+        self.addSubview(self.posterImageView)
+        self.posterImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.posterImageView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        self.posterImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        self.posterImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        self.posterImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        self.posterImageView.contentMode = .top
+        self.posterImageView.clipsToBounds = true
+        
         self.addSubview(self.infoLabel)
         self.infoLabel.translatesAutoresizingMaskIntoConstraints = false
         self.infoLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.infoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         self.infoLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
         self.infoLabel.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        self.infoLabel.textColor = .white
         self.infoLabel.numberOfLines = 2
         
         self.addSubview(self.titleLabel)
@@ -70,7 +79,14 @@ class MovieDetailHeaderView: UIView {
         self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         self.titleLabel.bottomAnchor.constraint(equalTo: self.infoLabel.topAnchor, constant: -16).isActive = true
         self.titleLabel.font = UIFont.systemFont(ofSize: 36, weight: .regular)
-        self.titleLabel.textColor = .white
+
+        self.posterImageView.addSubview(self.overlayImageView)
+        self.overlayImageView.translatesAutoresizingMaskIntoConstraints = false
+        self.overlayImageView.topAnchor.constraint(equalTo: self.posterImageView.topAnchor).isActive = true
+        self.overlayImageView.bottomAnchor.constraint(equalTo: self.posterImageView.bottomAnchor).isActive = true
+        self.overlayImageView.leadingAnchor.constraint(equalTo: self.posterImageView.leadingAnchor).isActive = true
+        self.overlayImageView.trailingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor).isActive = true
+        self.overlayImageView.backgroundColor = .posterOverlayColor
     }
     
     private func updateInterface() {
