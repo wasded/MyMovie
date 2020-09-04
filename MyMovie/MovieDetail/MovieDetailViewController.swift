@@ -49,7 +49,7 @@ class MovieDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.navigationController?.navigationBar.tintColor = .navigationBarBackButtonColor
+        self.navigationController?.navigationBar.tintColor = .mainTextColor
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -82,6 +82,8 @@ class MovieDetailViewController: UIViewController {
     
     private func registerCells() {
         self.tableView.register(MovieDetailActionsCell.self, forCellReuseIdentifier: String(describing: MovieDetailActionsCell.self))
+        self.tableView.register(MovieDetailDescriptionCell.self, forCellReuseIdentifier: String(describing: MovieDetailDescriptionCell.self))
+        
     }
     
     private func configureInteface() {
@@ -119,6 +121,11 @@ class MovieDetailViewController: UIViewController {
     
     @objc func watchLaterButtonDidTap() {
     }
+    
+    @objc func expandButtonDidTap() {
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
+    }
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -138,6 +145,12 @@ extension MovieDetailViewController: SkeletonTableViewDelegate, SkeletonTableVie
             let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieDetailActionsCell.self), for: indexPath) as! MovieDetailActionsCell
             cell.watchLaterView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.watchLaterButtonDidTap)))
             cell.favoriteView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.favoriteButtonDidTap)))
+            cell.selectionStyle = data.isSelectable ? .default : .none
+            cell.data = data
+            return cell
+        } else if let data = data as? MovieDetailDescriptionCellData {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieDetailDescriptionCell.self), for: indexPath) as! MovieDetailDescriptionCell
+            cell.expandButton.addTarget(self, action: #selector(self.expandButtonDidTap), for: .touchUpInside)
             cell.selectionStyle = data.isSelectable ? .default : .none
             cell.data = data
             return cell

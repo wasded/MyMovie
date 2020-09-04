@@ -31,7 +31,7 @@ extension UIColor {
         return UIColor(named: "posterOverlayColor")!
     }
     
-    open class var navigationBarBackButtonColor: UIColor {
-        return UIColor(named: "navigationBarBackButtonColor")!
+    open class var mainTextColor: UIColor {
+        return UIColor(named: "mainTextColor")!
     }
 }

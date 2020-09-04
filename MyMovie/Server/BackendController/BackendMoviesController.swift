@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 protocol BackendMoviesController: class {
-    func getDetail(movieID: Int, language: String, appendToResponse: String?) -> AnyPublisher<MovieDetailResponse, Error>
+    func getDetail(movieID: Int, language: String?, appendToResponse: String?) -> AnyPublisher<MovieDetailResponse, Error>
 }

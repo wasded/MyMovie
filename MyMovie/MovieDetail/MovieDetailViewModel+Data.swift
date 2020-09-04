@@ -24,20 +24,25 @@ extension MovieDetailViewModel {
     func getData(model: MovieDetailResponse) -> [MovieDetailSection] {
         var sections = [MovieDetailSection]()
         
-        sections.append(self.getMovieSection())
+        sections.append(self.getMovieSection(model: model))
         
         return sections
     }
     
-    func getMovieSection() -> MovieDetailSection {
+    func getMovieSection(model: MovieDetailResponse) -> MovieDetailSection {
         var section = MovieDetailSection()
         
         section.items.append(self.getActionsCell())
+        section.items.append(self.getDescriptionCell(model: model))
         
         return section
     }
     
     func getActionsCell() -> MovieDetailActionsCellData {
         return MovieDetailActionsCellData(isWatchLater: false, isFavorite: false)
+    }
+    
+    func getDescriptionCell(model: MovieDetailResponse) -> MovieDetailDescriptionCellData {
+        return MovieDetailDescriptionCellData(descritpion: model.overview)
     }
 }

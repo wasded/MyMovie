@@ -97,7 +97,7 @@ extension DefaultBackendController: BackendDiscoverController {
 
 // MARK: - BackendMoviesController
 extension DefaultBackendController: BackendMoviesController {
-    func getDetail(movieID: Int, language: String, appendToResponse: String?) -> AnyPublisher<MovieDetailResponse, Error> {
+    func getDetail(movieID: Int, language: String?, appendToResponse: String?) -> AnyPublisher<MovieDetailResponse, Error> {
         var queryParameters = [String: Any]()
         queryParameters["language"] = language
         queryParameters["append_to_response"] = appendToResponse

@@ -41,7 +41,7 @@ class MovieDetailViewModel {
     
     // MARK: - Methods
     func start() {
-        self.backendController.getDetail(movieID: self.movieID, language: Locale.current.languageCode ?? "ru_RU", appendToResponse: nil)
+        self.backendController.getDetail(movieID: self.movieID, language: Locale.preferredLanguages.first, appendToResponse: nil)
             .sink(receiveCompletion: { (completion) in
             }) { (response) in
                 self.movieDetailModel = self.generateMovieDetailModel(from: response)
