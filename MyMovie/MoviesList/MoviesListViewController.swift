@@ -171,7 +171,7 @@ extension MoviesListViewController: UITableViewDataSource, UITableViewDelegate {
         
         let urlPoster: URL?
         if let posterPath = data.posterPath {
-            urlPoster = APIHelper.getPosterURL(posterType: .custom(200), posterPath: posterPath)
+            urlPoster = APIHelper.getImageURL(posterType: .custom(200), posterPath: posterPath)
         } else {
             urlPoster = nil
         }

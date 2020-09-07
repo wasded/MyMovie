@@ -50,6 +50,9 @@ class MovieDetailCrewView: UIView {
         self.profileImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         self.profileImageView.widthAnchor.constraint(equalToConstant: 96).isActive = true
         self.profileImageView.heightAnchor.constraint(equalToConstant: 96).isActive = true
+        self.profileImageView.contentMode = .scaleAspectFill
+        self.profileImageView.layer.masksToBounds = true
+        self.profileImageView.clipsToBounds = true
         self.profileImageView.layer.cornerRadius = 48
         
         self.addSubview(self.fullnameLabel)
@@ -71,7 +74,6 @@ class MovieDetailCrewView: UIView {
         self.jobLabel.numberOfLines = 1
         self.jobLabel.textAlignment = .center
     }
-    
 }
 
 class MovieDetailCrewCell: UITableViewCell {
@@ -85,6 +87,7 @@ class MovieDetailCrewCell: UITableViewCell {
     let scrollView = UIScrollView()
     let containerView = UIView()
     let stackView = UIStackView()
+    let titleLabel = UILabel()
     
     // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -104,9 +107,16 @@ class MovieDetailCrewCell: UITableViewCell {
     
     // MARK: - Methods
     private func configureInterface() {
+        self.addSubview(self.titleLabel)
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
+        self.titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        self.titleLabel.font = .systemFont(ofSize: 24, weight: .semibold)
+        self.titleLabel.text = "Актеры и создатели"
+        
         self.addSubview(self.scrollView)
         self.scrollView.translatesAutoresizingMaskIntoConstraints = false
-        self.scrollView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        self.scrollView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16).isActive = true
         self.scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         self.scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         self.scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true

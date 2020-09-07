@@ -47,6 +47,10 @@ class MovieDetailHeaderView: UIView {
     
     // MARK: - Methods
     private func configureInterface() {
+        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]//[.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 16
+        
         self.addSubview(self.posterImageView)
         self.posterImageView.translatesAutoresizingMaskIntoConstraints = false
         self.posterImageView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true

@@ -40,10 +40,38 @@ extension MovieDetailViewModel {
     }
     
     func getCrewCell(movieCredits: MovieCreditsResponse) -> MovieDetailCrewCellData {
-        let moviePersonInfo = movieCredits.crew
-            .prefix(5)
-            .map({ return MoviePersonInfo(name: $0.name.replacingOccurrences(of: " ", with: "\n"), job: $0.job, imageURL: nil) })
+        var moviePersonInfo = [MoviePersonInfo]()
         
-        return MovieDetailCrewCellData(crew: moviePersonInfo)
+        moviePersonInfo.append(contentsOf:movieCredits.cast
+            .prefix(5)
+            .map { (value) -> MoviePersonInfo in
+                let name = value.name.replacingOccurrences(of: " ", with: "\n")
+                let imageURL: URL?
+                
+                if let profilePath = value.profilePath {
+                    imageURL = APIHelper.getImageURL(posterType: .original, posterPath: profilePath)
+                } else {
+                    imageURL = nil
+                }
+                
+                return MoviePersonInfo(name: name, job: "Актер", imageURL: imageURL)
+        })
+        
+        moviePersonInfo.append(contentsOf:movieCredits.crew
+            .prefix(2)
+            .map { (value) -> MoviePersonInfo in
+                let name = value.name.replacingOccurrences(of: " ", with: "\n")
+                let imageURL: URL?
+                
+                if let profilePath = value.profilePath {
+                    imageURL = APIHelper.getImageURL(posterType: .original, posterPath: profilePath)
+                } else {
+                    imageURL = nil
+                }
+                
+                return MoviePersonInfo(name: name, job: value.job, imageURL: imageURL)
+        })
+        
+        return MovieDetailCrewCellData(crew: moviePersonInfo.shuffled())
     }
 }

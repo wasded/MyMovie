@@ -37,7 +37,7 @@ public struct APIHelper {
     
     public static let codeTimeout = 40
     public static let baseURL = "https://api.themoviedb.org/3"
-    public static let urlOriginalPoster = "http://image.tmdb.org/t/p/"
+    public static let imageBaseURL = "http://image.tmdb.org/t/p/"
     public static let apiKey = "ee044de647ad25b4f147aa2142bd2693"
     
     static let jsonDecoder: JSONDecoder = {
@@ -48,8 +48,8 @@ public struct APIHelper {
         return jsonDecoder
     }()
     
-    static func getPosterURL(posterType: APIHelper.PosterType, posterPath: String) -> URL? {
-        return URL(string: String(format: "%@/%@/%@", APIHelper.urlOriginalPoster, posterType.getURLParameter(), posterPath))
+    static func getImageURL(posterType: APIHelper.PosterType, posterPath: String) -> URL? {
+        return URL(string: String(format: "%@/%@/%@", APIHelper.imageBaseURL, posterType.getURLParameter(), posterPath))
     }
 }
     

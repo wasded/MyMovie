@@ -81,7 +81,7 @@ class MovieDetailViewModel {
         let urlPoster: URL?
         
         if let posterPath = fullMovieInfo.movieInfo.posterPath {
-            urlPoster = APIHelper.getPosterURL(posterType: .original, posterPath: posterPath)
+            urlPoster = APIHelper.getImageURL(posterType: .original, posterPath: posterPath)
         } else {
             urlPoster = nil
         }
