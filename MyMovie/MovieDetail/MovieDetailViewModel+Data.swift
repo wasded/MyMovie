@@ -42,7 +42,8 @@ extension MovieDetailViewModel {
     func getCrewCell(movieCredits: MovieCreditsResponse) -> MovieDetailCrewCellData {
         let moviePersonInfo = movieCredits.crew
             .prefix(5)
-            .map({ MoviePersonInfo(name: $0.name, job: $0.job, imageURL: nil) })
+            .map({ return MoviePersonInfo(name: $0.name.replacingOccurrences(of: " ", with: "\n"), job: $0.job, imageURL: nil) })
+        
         return MovieDetailCrewCellData(crew: moviePersonInfo)
     }
 }

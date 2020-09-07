@@ -57,8 +57,9 @@ class MovieDetailCrewView: UIView {
         self.fullnameLabel.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: 4).isActive = true
         self.fullnameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.fullnameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        self.fullnameLabel.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        self.fullnameLabel.font = .systemFont(ofSize: 13, weight: .semibold)
         self.fullnameLabel.numberOfLines = 2
+        self.fullnameLabel.textAlignment = .center
         
         self.addSubview(self.jobLabel)
         self.jobLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -67,7 +68,8 @@ class MovieDetailCrewView: UIView {
         self.jobLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.jobLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         self.jobLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        self.fullnameLabel.numberOfLines = 1
+        self.jobLabel.numberOfLines = 1
+        self.jobLabel.textAlignment = .center
     }
     
 }
@@ -116,8 +118,8 @@ class MovieDetailCrewCell: UITableViewCell {
         self.containerView.translatesAutoresizingMaskIntoConstraints = false
         self.containerView.topAnchor.constraint(equalTo: self.scrollView.topAnchor).isActive = true
         self.containerView.bottomAnchor.constraint(equalTo: self.scrollView.bottomAnchor).isActive = true
-        self.containerView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16).isActive = true
-        self.containerView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16).isActive = true
+        self.containerView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor).isActive = true
+        self.containerView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor).isActive = true
         
         let widthAnchor = self.containerView.widthAnchor.constraint(equalTo: self.scrollView.widthAnchor)
         widthAnchor.priority = UILayoutPriority(250)
@@ -129,10 +131,10 @@ class MovieDetailCrewCell: UITableViewCell {
         
         self.containerView.addSubview(self.stackView)
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
-        self.stackView.topAnchor.constraint(equalTo: self.containerView.topAnchor).isActive = true
-        self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor).isActive = true
-        self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor).isActive = true
-        self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor).isActive = true
+        self.stackView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 16).isActive = true
+        self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -16).isActive = true
+        self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16).isActive = true
+        self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16).isActive = true
         self.stackView.axis = .horizontal
         self.stackView.spacing = 16
     }
@@ -153,9 +155,11 @@ class MovieDetailCrewCell: UITableViewCell {
             view.jobLabel.text = crew.job
             
             if let imageURL = crew.imageURL {
+                view.backgroundColor = nil
                 view.profileImageView.sd_setImage(with: imageURL, completed: nil)
             } else {
-                view.profileImageView.image = nil
+                view.profileImageView.image = #imageLiteral(resourceName: "noImage")
+                view.profileImageView.backgroundColor = .mainTextColor
             }
             
             return view
