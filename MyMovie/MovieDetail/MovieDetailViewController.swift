@@ -83,6 +83,7 @@ class MovieDetailViewController: UIViewController {
     private func registerCells() {
         self.tableView.register(MovieDetailActionsCell.self, forCellReuseIdentifier: String(describing: MovieDetailActionsCell.self))
         self.tableView.register(MovieDetailDescriptionCell.self, forCellReuseIdentifier: String(describing: MovieDetailDescriptionCell.self))
+        self.tableView.register(MovieDetailCrewCell.self, forCellReuseIdentifier: String(describing: MovieDetailCrewCell.self))
         
     }
     
@@ -145,13 +146,18 @@ extension MovieDetailViewController: SkeletonTableViewDelegate, SkeletonTableVie
             let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieDetailActionsCell.self), for: indexPath) as! MovieDetailActionsCell
             cell.watchLaterView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.watchLaterButtonDidTap)))
             cell.favoriteView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.favoriteButtonDidTap)))
-            cell.selectionStyle = data.isSelectable ? .default : .none
+            cell.selectionStyle = .none
             cell.data = data
             return cell
         } else if let data = data as? MovieDetailDescriptionCellData {
             let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieDetailDescriptionCell.self), for: indexPath) as! MovieDetailDescriptionCell
             cell.expandButton.addTarget(self, action: #selector(self.expandButtonDidTap), for: .touchUpInside)
-            cell.selectionStyle = data.isSelectable ? .default : .none
+            cell.selectionStyle = .none
+            cell.data = data
+            return cell
+        } else if let data = data as? MovieDetailCrewCellData {
+            let cell = self.tableView.dequeueReusableCell(withIdentifier: String(describing: MovieDetailCrewCell.self), for: indexPath) as! MovieDetailCrewCell
+            cell.selectionStyle = .none
             cell.data = data
             return cell
         } else {

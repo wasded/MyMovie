@@ -9,10 +9,7 @@
 import Foundation
 import UIKit
 
-struct MovieDetailDescriptionCellData: Equatable, MovieDetailCell {
-    var isSelectable: Bool {
-        return false
-    }
+struct MovieDetailDescriptionCellData: Equatable {
     var descritpion: String?
 }
 

@@ -20,11 +20,22 @@ struct MovieDetailModel {
     }
 }
 
+struct FullMovieInfo {
+    let movieInfo: MovieDetailResponse
+    let movieCredits: MovieCreditsResponse
+}
+
 class MovieDetailViewModel {
     // MARK: - Proprties
+    
     @Injected var backendController: BackendMoviesController
     
     @Published var movieDetailModel: MovieDetailModel?
+    
+    @Published private(set) var movieInfo: MovieDetailResponse?
+    @Published private(set) var movieCredits: MovieCreditsResponse?
+    
+    private(set) var fullMovieInfo: FullMovieInfo?
     
     let movieID: Int
     private var cancellables: Set<AnyCancellable> = []
@@ -37,37 +48,70 @@ class MovieDetailViewModel {
     // MARK: - Init
     init(movieID: Int) {
         self.movieID = movieID
+        self.bindingToProperties()
     }
     
     // MARK: - Methods
     func start() {
+        self.getMovieDetail()
+        self.getMovieCredits()
+    }
+    
+    func getMovieDetail() {
         self.backendController.getDetail(movieID: self.movieID, language: Locale.preferredLanguages.first, appendToResponse: nil)
             .sink(receiveCompletion: { (completion) in
+                print()
             }) { (response) in
-                self.movieDetailModel = self.generateMovieDetailModel(from: response)
+                self.movieInfo = response
         }
         .store(in: &self.cancellables)
     }
     
-    func generateMovieDetailModel(from movieDetailResponse: MovieDetailResponse) -> MovieDetailModel {
+    func getMovieCredits() {
+        self.backendController.getCredits(movieID: self.movieID)
+            .sink(receiveCompletion: { (completion) in
+                print()
+            }) { (response) in
+                self.movieCredits = response
+        }
+        .store(in: &self.cancellables)
+    }
+    
+    func generateMovieDetailModel(fullMovieInfo: FullMovieInfo) -> MovieDetailModel {
         let urlPoster: URL?
         
-        if let posterPath = movieDetailResponse.posterPath {
+        if let posterPath = fullMovieInfo.movieInfo.posterPath {
             urlPoster = APIHelper.getPosterURL(posterType: .original, posterPath: posterPath)
         } else {
             urlPoster = nil
         }
         
-        let releaseDate = self.dateFormatter.string(from: movieDetailResponse.releaseDate)
-        let genres = movieDetailResponse.genres.map({ $0.name }).joined(separator: ", ")
-        let countries = movieDetailResponse.productionCountries.map({ $0.name }).joined(separator: ", ")
+        let releaseDate = self.dateFormatter.string(from: fullMovieInfo.movieInfo.releaseDate)
+        let genres = fullMovieInfo.movieInfo.genres.map({ $0.name }).joined(separator: ", ")
+        let countries = fullMovieInfo.movieInfo.productionCountries.map({ $0.name }).joined(separator: ", ")
         
         let info = String(format: "%@ • %@ • %@", releaseDate, genres, countries)
         
-        
         return MovieDetailModel(headerData: MovieDetailHeaderData(posterURL: urlPoster,
-                                                                  title: movieDetailResponse.title,
+                                                                  title: fullMovieInfo.movieInfo.title,
                                                                   info: info),
-                                sections: self.getData(model: movieDetailResponse))
+                                sections: self.getData(fullMovieInfo: fullMovieInfo))
+    }
+    
+    private func bindingToProperties() {
+        Publishers.CombineLatest(self.$movieInfo, self.$movieCredits)
+            .compactMap({ (value) -> FullMovieInfo? in
+                if let movieInfo = value.0, let movieCredits = value.1 {
+                    return FullMovieInfo(movieInfo: movieInfo, movieCredits: movieCredits)
+                } else {
+                    return nil
+                }
+            })
+            .sink(receiveCompletion: { (_) in
+            }) { (fullMovieInfo) in
+                self.movieDetailModel = self.generateMovieDetailModel(fullMovieInfo: fullMovieInfo)
+                
+        }
+        .store(in: &self.cancellables)
     }
 }

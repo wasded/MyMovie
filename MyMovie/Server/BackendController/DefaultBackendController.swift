@@ -104,4 +104,8 @@ extension DefaultBackendController: BackendMoviesController {
         
         return self.performRequest(with: .get, to: "/movie/\(movieID)", response: MovieDetailResponse.self, queryParameters: queryParameters, bodyType: .rawData)
     }
+    
+    func getCredits(movieID: Int) -> AnyPublisher<MovieCreditsResponse, Error> {
+        return self.performRequest(with: .get, to: "/movie/\(movieID)/credits", response: MovieCreditsResponse.self, bodyType: .rawData)
+    }
 }

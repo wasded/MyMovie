@@ -80,10 +80,7 @@ class MovieDetailActionView: UIView {
 }
 
 // MARK: - Data
-struct MovieDetailActionsCellData: Equatable, MovieDetailCell {
-    var isSelectable: Bool {
-        return false
-    }
+struct MovieDetailActionsCellData: Equatable {
     var isWatchLater: Bool
     var isFavorite: Bool
 }

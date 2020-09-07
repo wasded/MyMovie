@@ -8,41 +8,41 @@
 
 import Foundation
 
-protocol MovieDetailCell {
-    var isSelectable: Bool { get }
-}
-
 struct MovieDetailSection {
-    var items: [MovieDetailCell]
+    var items: [Any]
     
-    init(items: [MovieDetailCell] = []) {
+    init(items: [Any] = []) {
         self.items = items
     }
 }
 
 extension MovieDetailViewModel {
-    func getData(model: MovieDetailResponse) -> [MovieDetailSection] {
+    func getData(fullMovieInfo: FullMovieInfo) -> [MovieDetailSection] {
         var sections = [MovieDetailSection]()
         
-        sections.append(self.getMovieSection(model: model))
-        
-        return sections
-    }
-    
-    func getMovieSection(model: MovieDetailResponse) -> MovieDetailSection {
         var section = MovieDetailSection()
         
         section.items.append(self.getActionsCell())
-        section.items.append(self.getDescriptionCell(model: model))
+        section.items.append(self.getDescriptionCell(movieInfo: fullMovieInfo.movieInfo))
+        section.items.append(self.getCrewCell(movieCredits: fullMovieInfo.movieCredits))
         
-        return section
+        sections.append(section)
+        
+        return sections
     }
     
     func getActionsCell() -> MovieDetailActionsCellData {
         return MovieDetailActionsCellData(isWatchLater: false, isFavorite: false)
     }
     
-    func getDescriptionCell(model: MovieDetailResponse) -> MovieDetailDescriptionCellData {
-        return MovieDetailDescriptionCellData(descritpion: model.overview)
+    func getDescriptionCell(movieInfo: MovieDetailResponse) -> MovieDetailDescriptionCellData {
+        return MovieDetailDescriptionCellData(descritpion: movieInfo.overview)
+    }
+    
+    func getCrewCell(movieCredits: MovieCreditsResponse) -> MovieDetailCrewCellData {
+        let moviePersonInfo = movieCredits.crew
+            .prefix(5)
+            .map({ MoviePersonInfo(name: $0.name, job: $0.job, imageURL: nil) })
+        return MovieDetailCrewCellData(crew: moviePersonInfo)
     }
 }
