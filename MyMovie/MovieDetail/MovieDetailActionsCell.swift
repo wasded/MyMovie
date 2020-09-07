@@ -70,7 +70,7 @@ class MovieDetailActionView: UIView {
         self.textLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         self.textLabel.leadingAnchor.constraint(equalTo: self.imageView.trailingAnchor, constant: 6).isActive = true
         self.textLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
-        self.textLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        self.textLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
     }
     
     private func updateInterface() {

@@ -23,6 +23,7 @@ struct MovieDetailModel {
 struct FullMovieInfo {
     let movieInfo: MovieDetailResponse
     let movieCredits: MovieCreditsResponse
+    let movieKeywords: MovieKeywordsResponse
 }
 
 class MovieDetailViewModel {
@@ -34,6 +35,7 @@ class MovieDetailViewModel {
     
     @Published private(set) var movieInfo: MovieDetailResponse?
     @Published private(set) var movieCredits: MovieCreditsResponse?
+    @Published private(set) var movieKeywords: MovieKeywordsResponse?
     
     private(set) var fullMovieInfo: FullMovieInfo?
     
@@ -55,12 +57,12 @@ class MovieDetailViewModel {
     func start() {
         self.getMovieDetail()
         self.getMovieCredits()
+        self.getMovieKeywords()
     }
     
     func getMovieDetail() {
         self.backendController.getDetail(movieID: self.movieID, language: Locale.preferredLanguages.first, appendToResponse: nil)
             .sink(receiveCompletion: { (completion) in
-                print()
             }) { (response) in
                 self.movieInfo = response
         }
@@ -70,9 +72,17 @@ class MovieDetailViewModel {
     func getMovieCredits() {
         self.backendController.getCredits(movieID: self.movieID)
             .sink(receiveCompletion: { (completion) in
-                print()
             }) { (response) in
                 self.movieCredits = response
+        }
+        .store(in: &self.cancellables)
+    }
+    
+    func getMovieKeywords() {
+        self.backendController.getMovieKeywords(movieID: self.movieID)
+            .sink(receiveCompletion: { (completion) in
+            }) { (response) in
+                self.movieKeywords = response
         }
         .store(in: &self.cancellables)
     }
@@ -99,10 +109,10 @@ class MovieDetailViewModel {
     }
     
     private func bindingToProperties() {
-        Publishers.CombineLatest(self.$movieInfo, self.$movieCredits)
+        Publishers.CombineLatest3(self.$movieInfo, self.$movieCredits, self.$movieKeywords)
             .compactMap({ (value) -> FullMovieInfo? in
-                if let movieInfo = value.0, let movieCredits = value.1 {
-                    return FullMovieInfo(movieInfo: movieInfo, movieCredits: movieCredits)
+                if let movieInfo = value.0, let movieCredits = value.1, let movieKeywords = value.2 {
+                    return FullMovieInfo(movieInfo: movieInfo, movieCredits: movieCredits, movieKeywords: movieKeywords)
                 } else {
                     return nil
                 }
