@@ -64,7 +64,7 @@ class MovieDetailDescriptionCell: UITableViewCell {
         self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12).isActive = true
         self.descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        self.descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -48).isActive = true
+        self.descriptionLabel.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor, constant: -16).isActive = true
         self.descriptionLabel.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         self.descriptionLabel.numberOfLines = 6
         self.descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
@@ -75,7 +75,7 @@ class MovieDetailDescriptionCell: UITableViewCell {
         self.expandButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.expandButtonBottomConstraint = self.expandButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16)
         self.expandButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        self.expandButton.tintColor = .mainTextColor
+        self.expandButton.setTitleColor(.mainTextColor, for: .normal)
         self.expandButton.setTitle("Развернуть", for: .normal)
         self.expandButton.addTarget(self, action: #selector(self.expandButtonDidTap(_:)), for: .touchUpInside)
         
