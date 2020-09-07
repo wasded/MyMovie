@@ -63,6 +63,7 @@ class MovieDetailActionView: UIView {
         self.imageView.heightAnchor.constraint(equalToConstant: 17).isActive = true
         self.imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         self.imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        self.imageView.contentMode = .scaleAspectFit
         
         self.addSubview(self.textLabel)
         self.textLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -76,6 +77,7 @@ class MovieDetailActionView: UIView {
         self.layer.borderColor = self.color.cgColor
         self.textLabel.textColor = self.color
         self.textLabel.text = text
+        self.imageView.image = self.image
     }
 }
 
@@ -121,7 +123,7 @@ class MovieDetailActionsCell: UITableViewCell {
         self.watchLaterView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.watchLaterView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
         self.watchLaterView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
-        self.watchLaterView.color = .systemGreen
+        self.watchLaterView.color = #colorLiteral(red: 0.2862745098, green: 0.5764705882, blue: 0, alpha: 1)
         
         self.addSubview(self.favoriteView)
         self.favoriteView.translatesAutoresizingMaskIntoConstraints = false
@@ -129,12 +131,15 @@ class MovieDetailActionsCell: UITableViewCell {
         self.favoriteView.leadingAnchor.constraint(equalTo: self.watchLaterView.trailingAnchor, constant: 28).isActive = true
         self.favoriteView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
         self.favoriteView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
-        self.favoriteView.color = .systemRed
+        self.favoriteView.color = #colorLiteral(red: 1, green: 0.262745098, blue: 0.262745098, alpha: 1)
     }
     
     private func updateInterface() {
         guard let data = self.data else { return }
         self.watchLaterView.text = "Смотреть позже"
+        self.watchLaterView.image = #imageLiteral(resourceName: "watchLater")
+        
         self.favoriteView.text = "Любимое"
+        self.favoriteView.image = #imageLiteral(resourceName: "favorite")
     }
 }
