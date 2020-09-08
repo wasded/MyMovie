@@ -104,7 +104,9 @@ class MovieDetailViewModel {
         
         return MovieDetailModel(headerData: MovieDetailHeaderData(posterURL: urlPoster,
                                                                   title: fullMovieInfo.movieInfo.title,
-                                                                  info: info),
+                                                                  info: info,
+                                                                  rating: 0,
+                                                                  userRating: 0),
                                 sections: self.getData(fullMovieInfo: fullMovieInfo))
     }
     

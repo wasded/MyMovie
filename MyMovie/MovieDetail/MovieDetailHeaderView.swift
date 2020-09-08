@@ -14,6 +14,8 @@ struct MovieDetailHeaderData {
     var posterURL: URL?
     var title: String?
     var info: String?
+    var rating: Double
+    var userRating: Double?
 }
 
 class MovieDetailHeaderView: UIView {
@@ -28,6 +30,7 @@ class MovieDetailHeaderView: UIView {
     let overlayImageView = UIView()
     let titleLabel = UILabel()
     let infoLabel = UILabel()
+    let ratingView = MovieDetailRatingView()
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -47,7 +50,7 @@ class MovieDetailHeaderView: UIView {
     
     // MARK: - Methods
     private func configureInterface() {
-        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]//[.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         self.layer.masksToBounds = true
         self.layer.cornerRadius = 16
         
@@ -74,7 +77,7 @@ class MovieDetailHeaderView: UIView {
         self.infoLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.infoLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         self.infoLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
-        self.infoLabel.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        self.infoLabel.font = .systemFont(ofSize: 18, weight: .regular)
         self.infoLabel.numberOfLines = 2
         
         self.addSubview(self.titleLabel)
@@ -82,7 +85,7 @@ class MovieDetailHeaderView: UIView {
         self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         self.titleLabel.bottomAnchor.constraint(equalTo: self.infoLabel.topAnchor, constant: -16).isActive = true
-        self.titleLabel.font = UIFont.systemFont(ofSize: 36, weight: .regular)
+        self.titleLabel.font = .systemFont(ofSize: 36, weight: .semibold)
 
         self.posterImageView.addSubview(self.overlayImageView)
         self.overlayImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -91,6 +94,15 @@ class MovieDetailHeaderView: UIView {
         self.overlayImageView.leadingAnchor.constraint(equalTo: self.posterImageView.leadingAnchor).isActive = true
         self.overlayImageView.trailingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor).isActive = true
         self.overlayImageView.backgroundColor = .posterOverlayColor
+        
+        self.addSubview(self.ratingView)
+        // FIXME: 44 это высота navbar. Придумать способ получше
+        let topBarHeight = UIApplication.shared.statusBarFrame.size.height + 44
+        self.ratingView.translatesAutoresizingMaskIntoConstraints = false
+        self.ratingView.topAnchor.constraint(equalTo: self.topAnchor, constant: topBarHeight + 16).isActive = true
+        self.ratingView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        self.ratingView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 16).isActive = true
+        self.ratingView.heightAnchor.constraint(equalToConstant: 32).isActive = true
     }
     
     private func updateInterface() {
@@ -107,6 +119,9 @@ class MovieDetailHeaderView: UIView {
                 }
             }
         }
+        
+        self.ratingView.userRating = data.userRating
+        self.ratingView.rating = data.rating
     }
     
     // MARK: - Actions
